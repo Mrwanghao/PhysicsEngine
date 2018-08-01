@@ -13,10 +13,42 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\Matrix">
+      <UniqueIdentifier>{1365923c-f100-4e28-9d6a-459737f5a1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Matrix\Matrix2">
+      <UniqueIdentifier>{535c38e2-692a-4954-8b43-685f4201b7ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Matrix\Matrix3">
+      <UniqueIdentifier>{e29e1d0a-3ea9-4b3f-972b-348540f55243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Matrix\Matrix4">
+      <UniqueIdentifier>{22841513-84ab-45a6-aaf0-2a019acde5d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix2.cpp">
+      <Filter>源文件\Matrix\Matrix2</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3.cpp">
+      <Filter>源文件\Matrix\Matrix3</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4.cpp">
+      <Filter>源文件\Matrix\Matrix4</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Matrix2.h">
+      <Filter>源文件\Matrix\Matrix2</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3.h">
+      <Filter>源文件\Matrix\Matrix3</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4.h">
+      <Filter>源文件\Matrix\Matrix4</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
