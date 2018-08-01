@@ -1,4 +1,5 @@
 #pragma once
+#include "Matrix2.h"
 
 
 class Matrix3
@@ -16,6 +17,20 @@ public:
 	};
 
 public:
-	inline float* operator[](int index) { return &(data[index * 3]); }
+	Matrix3();
+	Matrix3(float m00, float m01, float m02,
+		float m10, float m11, float m12,
+		float m20, float m21, float m22);
 
+public:
+	inline float* operator[](int index) { return &(data[index * 3]); }
+	Matrix3& operator*(float scale);
+public:
+	Matrix3 Transpose() const;
+	float Determinant() const;
+	Matrix2 Cut(int row, int col) const;
+	Matrix3 Minor() const;
+	Matrix3 Cofactor() const;
+	Matrix3 Adjugate() const;
+	Matrix3 Invert() const;
 };

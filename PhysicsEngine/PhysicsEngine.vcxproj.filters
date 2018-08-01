@@ -25,6 +25,15 @@
     <Filter Include="源文件\Matrix\Matrix4">
       <UniqueIdentifier>{22841513-84ab-45a6-aaf0-2a019acde5d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Matrix\MathUtil">
+      <UniqueIdentifier>{c70a1cb2-2715-40ad-995d-847855a8bdd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Vector">
+      <UniqueIdentifier>{b50eb4b7-b8c1-4a68-b1c8-2dfb990ffdcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Vector\Vec3">
+      <UniqueIdentifier>{694fdd55-c760-4b50-83f4-694c8f85ff17}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +48,12 @@
     <ClCompile Include="Matrix4.cpp">
       <Filter>源文件\Matrix\Matrix4</Filter>
     </ClCompile>
+    <ClCompile Include="MathUtil.cpp">
+      <Filter>源文件\Matrix\MathUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>源文件\Vector\Vec3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2.h">
@@ -49,6 +64,12 @@
     </ClInclude>
     <ClInclude Include="Matrix4.h">
       <Filter>源文件\Matrix\Matrix4</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>源文件\Matrix\MathUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>源文件\Vector\Vec3</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
