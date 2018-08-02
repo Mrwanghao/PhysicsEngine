@@ -13,26 +13,53 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="源文件\Matrix">
-      <UniqueIdentifier>{1365923c-f100-4e28-9d6a-459737f5a1e9}</UniqueIdentifier>
+    <Filter Include="源文件\Math">
+      <UniqueIdentifier>{5b65660c-85b4-4848-9e9f-e6c0b5c76dc5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Matrix\Matrix2">
-      <UniqueIdentifier>{535c38e2-692a-4954-8b43-685f4201b7ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Matrix\Matrix3">
-      <UniqueIdentifier>{e29e1d0a-3ea9-4b3f-972b-348540f55243}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Matrix\Matrix4">
-      <UniqueIdentifier>{22841513-84ab-45a6-aaf0-2a019acde5d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="源文件\Matrix\MathUtil">
+    <Filter Include="源文件\Math\MathUtil">
       <UniqueIdentifier>{c70a1cb2-2715-40ad-995d-847855a8bdd4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Vector">
+    <Filter Include="源文件\Math\Matrix">
+      <UniqueIdentifier>{1365923c-f100-4e28-9d6a-459737f5a1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Matrix\Matrix2">
+      <UniqueIdentifier>{535c38e2-692a-4954-8b43-685f4201b7ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Matrix\Matrix3">
+      <UniqueIdentifier>{e29e1d0a-3ea9-4b3f-972b-348540f55243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Matrix\Matrix4">
+      <UniqueIdentifier>{22841513-84ab-45a6-aaf0-2a019acde5d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Vector">
       <UniqueIdentifier>{b50eb4b7-b8c1-4a68-b1c8-2dfb990ffdcf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Vector\Vec3">
+    <Filter Include="源文件\Math\Vector\Vec3">
       <UniqueIdentifier>{694fdd55-c760-4b50-83f4-694c8f85ff17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Vector\Vec2">
+      <UniqueIdentifier>{8766297e-d3d9-4b6e-95a9-934d1ac8a7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math\Vector\Vec4">
+      <UniqueIdentifier>{c08c4461-664f-4af1-919e-9f31bfa1216b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D">
+      <UniqueIdentifier>{c01c0b57-d6ca-4404-86d0-a256a5c97898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\Line2D">
+      <UniqueIdentifier>{e7818e95-3ccc-4922-9fca-963fc0ec6517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\Circle2D">
+      <UniqueIdentifier>{4daf20d5-2b58-41e6-93e5-3c945a614797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\Rectangle2D">
+      <UniqueIdentifier>{49fd4226-8737-4c9a-84af-b5dde6782ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\OrientedRectangle2D">
+      <UniqueIdentifier>{db0e0c0e-1fbb-428a-970e-67b7cab2a4d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\math2d">
+      <UniqueIdentifier>{aa5d77b7-a2b7-421e-9d9d-dfaff649c97c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,36 +67,78 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Matrix2.cpp">
-      <Filter>源文件\Matrix\Matrix2</Filter>
+      <Filter>源文件\Math\Matrix\Matrix2</Filter>
     </ClCompile>
     <ClCompile Include="Matrix3.cpp">
-      <Filter>源文件\Matrix\Matrix3</Filter>
+      <Filter>源文件\Math\Matrix\Matrix3</Filter>
     </ClCompile>
     <ClCompile Include="Matrix4.cpp">
-      <Filter>源文件\Matrix\Matrix4</Filter>
+      <Filter>源文件\Math\Matrix\Matrix4</Filter>
     </ClCompile>
     <ClCompile Include="MathUtil.cpp">
-      <Filter>源文件\Matrix\MathUtil</Filter>
+      <Filter>源文件\Math\MathUtil</Filter>
     </ClCompile>
     <ClCompile Include="Vec3.cpp">
-      <Filter>源文件\Vector\Vec3</Filter>
+      <Filter>源文件\Math\Vector\Vec3</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec4.cpp">
+      <Filter>源文件\Math\Vector\Vec4</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec2.cpp">
+      <Filter>源文件\Math\Vector\Vec2</Filter>
+    </ClCompile>
+    <ClCompile Include="Line2D.cpp">
+      <Filter>源文件\Geometry2D\Line2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Circle2D.cpp">
+      <Filter>源文件\Geometry2D\Circle2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle2D.cpp">
+      <Filter>源文件\Geometry2D\Rectangle2D</Filter>
+    </ClCompile>
+    <ClCompile Include="OrientedRectangle2D.cpp">
+      <Filter>源文件\Geometry2D\OrientedRectangle2D</Filter>
+    </ClCompile>
+    <ClCompile Include="math2d.cpp">
+      <Filter>源文件\Geometry2D\math2d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2.h">
-      <Filter>源文件\Matrix\Matrix2</Filter>
+      <Filter>源文件\Math\Matrix\Matrix2</Filter>
     </ClInclude>
     <ClInclude Include="Matrix3.h">
-      <Filter>源文件\Matrix\Matrix3</Filter>
+      <Filter>源文件\Math\Matrix\Matrix3</Filter>
     </ClInclude>
     <ClInclude Include="Matrix4.h">
-      <Filter>源文件\Matrix\Matrix4</Filter>
+      <Filter>源文件\Math\Matrix\Matrix4</Filter>
     </ClInclude>
     <ClInclude Include="MathUtil.h">
-      <Filter>源文件\Matrix\MathUtil</Filter>
+      <Filter>源文件\Math\MathUtil</Filter>
     </ClInclude>
     <ClInclude Include="Vec3.h">
-      <Filter>源文件\Vector\Vec3</Filter>
+      <Filter>源文件\Math\Vector\Vec3</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec4.h">
+      <Filter>源文件\Math\Vector\Vec4</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec2.h">
+      <Filter>源文件\Math\Vector\Vec2</Filter>
+    </ClInclude>
+    <ClInclude Include="Line2D.h">
+      <Filter>源文件\Geometry2D\Line2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Circle2D.h">
+      <Filter>源文件\Geometry2D\Circle2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle2D.h">
+      <Filter>源文件\Geometry2D\Rectangle2D</Filter>
+    </ClInclude>
+    <ClInclude Include="OrientedRectangle2D.h">
+      <Filter>源文件\Geometry2D\OrientedRectangle2D</Filter>
+    </ClInclude>
+    <ClInclude Include="math2d.h">
+      <Filter>源文件\Geometry2D\math2d</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

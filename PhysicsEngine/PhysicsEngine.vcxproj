@@ -115,19 +115,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Circle2D.cpp" />
+    <ClCompile Include="Line2D.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="math2d.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix2.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Matrix4.cpp" />
+    <ClCompile Include="OrientedRectangle2D.cpp" />
+    <ClCompile Include="Rectangle2D.cpp" />
+    <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Vec3.cpp" />
+    <ClCompile Include="Vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle2D.h" />
+    <ClInclude Include="Line2D.h" />
+    <ClInclude Include="math2d.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix2.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Matrix4.h" />
+    <ClInclude Include="OrientedRectangle2D.h" />
+    <ClInclude Include="Rectangle2D.h" />
+    <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Vec4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
