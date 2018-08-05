@@ -55,7 +55,106 @@ bool RectangleRectangleSAT(const Rectangle2D & rect1, const Rectangle2D & rect2)
 		}
 	}
 
+	//相交必定会导致两个轴向上发生交集
 	return true;
+}
+
+Interval2D GetInterval(const OrientedRectangle2D & orientedRectangle, const Vec2 & axis)
+{
+	Rectangle2D r = Rectangle2D(Point2D(orientedRectangle.origin - orientedRectangle.halfExtents), orientedRectangle.halfExtents * 2.0f);
+
+	Vec2 min = r.GetMin();
+	Vec2 max = r.GetMax();
+	Vec2 verts[] =
+	{
+		min,				max,
+		Vec2(min.x, max.y), Vec2(max.x, min.y)
+	};
+
+	float t = DEG2RAD(orientedRectangle.rotation);
+	Matrix2 rotMatrix =
+	{
+		 cosf(t), sinf(t),
+		-sinf(t), cosf(t)
+	};
+
+	for (int i = 0; i < 4; i++)
+	{
+		Vec2 r = verts[i] - orientedRectangle.origin;
+		r = r * rotMatrix;
+		verts[i] = r + orientedRectangle.origin;
+			
+	}
+
+	Interval2D res;
+	res.min = res.max = axis.Dot(verts[0]);
+	for (int i = 1; i < 4; i++)
+	{
+		float projection = axis.Dot(verts[i]);
+		res.min = projection < res.min ? projection : res.min;
+		res.max = projection > res.max ? projection : res.max;
+	}
+
+	return res;
+}
+
+bool OverlapOnAxis(const Rectangle2D & rect, const OrientedRectangle2D & orientedRectangle, const Vec2 & axis)
+{
+	Interval2D a = GetInterval(rect, axis);
+	Interval2D b = GetInterval(orientedRectangle, axis);
+	return a.min <= b.max && a.max >= a.min;
+}
+
+bool RectangleOrientedRectangle(const Rectangle2D & rect, const OrientedRectangle2D & orientedRectangle)
+{
+	Vec2 axisToTest[] =
+	{
+		Vec2(1.0f, 0.0f), Vec2(0.0f, 1.0f),
+		Vec2(), Vec2()
+	};
+
+	float t = DEG2RAD(orientedRectangle.rotation);
+	Matrix2 rotMatrix =
+	{
+		 cosf(t), sinf(t),
+		-sinf(t), cosf(t)
+	};
+
+	Vec2 axis = Vec2(orientedRectangle.halfExtents.x, 0.0f).GetNormalized();
+
+	axisToTest[2] = axisToTest[2] * axis;
+	axisToTest[3] = axisToTest[3] * axis;
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (!OverlapOnAxis(rect, orientedRectangle, axisToTest[i]))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool OrientedRectangleOrientedRectangle(const OrientedRectangle2D & orientedRectangle1, const OrientedRectangle2D & orientedRectangle2)
+{
+	Rectangle2D localRect(Point2D(), orientedRectangle1.halfExtents * 2.0f);
+	Vec2 r = orientedRectangle2.origin - orientedRectangle1.origin;
+
+	OrientedRectangle2D localRect2(orientedRectangle2.origin, orientedRectangle2.halfExtents, orientedRectangle2.rotation);
+	localRect2.rotation = orientedRectangle2.rotation - orientedRectangle1.rotation;
+
+	float t = DEG2RAD(-orientedRectangle1.rotation);
+	Matrix2 rotMatrix = 
+	{
+		 cosf(t), sinf(t),
+		-sinf(t), cosf(t)
+	};
+
+	r = r * rotMatrix;
+	localRect2.origin = r + orientedRectangle1.origin;
+
+	return RectangleToOrientedRectangle(localRect, localRect2);
 }
 
 bool Point2DOnLine2D(const Point2D & _point, const Line2D & _line2d)
