@@ -31,7 +31,7 @@ Vec2 Rectangle2D::GetMax() const
 	return Vec2(fmaxf(p1.x, p2.x), fmaxf(p1.y, p2.y));
 }
 
-Rectangle2D Rectangle2D::FromMinToMax(const Vec2& min, const Vec2& max) const
+Rectangle2D Rectangle2D::FromMinToMax(const Vec2& min, const Vec2& max)
 {
 	return Rectangle2D(min, max - min);
 }

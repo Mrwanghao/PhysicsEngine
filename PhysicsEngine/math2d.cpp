@@ -30,7 +30,6 @@ Interval2D GetInterval(const Rectangle2D & rect, const Vec2 & axis)
 		{
 			result.max = projection;
 		}
-
 	}
 
 	return result;
@@ -62,7 +61,7 @@ bool RectangleRectangleSAT(const Rectangle2D & rect1, const Rectangle2D & rect2)
 Interval2D GetInterval(const OrientedRectangle2D & orientedRectangle, const Vec2 & axis)
 {
 	Rectangle2D r = Rectangle2D(Point2D(orientedRectangle.origin - orientedRectangle.halfExtents), orientedRectangle.halfExtents * 2.0f);
-
+	
 	Vec2 min = r.GetMin();
 	Vec2 max = r.GetMax();
 	Vec2 verts[] =
@@ -78,6 +77,7 @@ Interval2D GetInterval(const OrientedRectangle2D & orientedRectangle, const Vec2
 		-sinf(t), cosf(t)
 	};
 
+	//把规整的四个顶点全部旋转 目的是获取到四个顶点的坐标值
 	for (int i = 0; i < 4; i++)
 	{
 		Vec2 r = verts[i] - orientedRectangle.origin;
@@ -94,7 +94,6 @@ Interval2D GetInterval(const OrientedRectangle2D & orientedRectangle, const Vec2
 		res.min = projection < res.min ? projection : res.min;
 		res.max = projection > res.max ? projection : res.max;
 	}
-
 	return res;
 }
 
@@ -109,7 +108,9 @@ bool RectangleOrientedRectangle(const Rectangle2D & rect, const OrientedRectangl
 {
 	Vec2 axisToTest[] =
 	{
+		//rectangle 的两个轴向
 		Vec2(1.0f, 0.0f), Vec2(0.0f, 1.0f),
+		//下面会获取oriented rectangle 的轴向
 		Vec2(), Vec2()
 	};
 
@@ -121,9 +122,10 @@ bool RectangleOrientedRectangle(const Rectangle2D & rect, const OrientedRectangl
 	};
 
 	Vec2 axis = Vec2(orientedRectangle.halfExtents.x, 0.0f).GetNormalized();
+	axisToTest[2] = axis * rotMatrix;
 
-	axisToTest[2] = axisToTest[2] * axis;
-	axisToTest[3] = axisToTest[3] * axis;
+	axis = Vec2(0.0f, orientedRectangle.halfExtents.y).GetNormalized();
+	axisToTest[3] = axis * rotMatrix;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -154,7 +156,7 @@ bool OrientedRectangleOrientedRectangle(const OrientedRectangle2D & orientedRect
 	r = r * rotMatrix;
 	localRect2.origin = r + orientedRectangle1.origin;
 
-	return RectangleToOrientedRectangle(localRect, localRect2);
+	return RectangleOrientedRectangle(localRect, localRect2);
 }
 
 bool Point2DOnLine2D(const Point2D & _point, const Line2D & _line2d)
@@ -320,12 +322,46 @@ bool RectangleRectangle(const Rectangle2D & rect1, const Rectangle2D & rect2)
 	return overX && overY;
 }
 
-bool RectangleToOrientedRectangle(const Rectangle2D & rect, const OrientedRectangle2D & orientedRectangle)
+Circle2D ContainingCircle(Point2D * pArray, int arrayCount)
 {
-	return false;
+	Point2D center;
+	for (int i = 0; i < arrayCount; i++)
+	{
+		center = center + pArray[i];
+	}
+
+	center = center * (1.0f / (float)arrayCount);
+
+	Circle2D result(center, 1.0f);
+	result.radius = (pArray[0] - center).MagnitudeSq();
+
+	for (int i = 1; i < arrayCount; i++)
+	{
+		float distance = (pArray[i] - center).MagnitudeSq();
+		if (distance > result.radius)
+		{
+			result.radius = distance;
+		}
+	}
+
+	result.radius = sqrtf(result.radius);
+	return result;
 }
 
-bool OrientedRectangleToOrientedRectangle(const OrientedRectangle2D & orientedRectangle1, const OrientedRectangle2D & orientedRectangle2)
+Rectangle2D ContainingRectangle(Point2D * pArray, int arrayCount)
 {
-	return false;
+	Rectangle2D result;
+
+	Vec2 min = pArray[0];
+	Vec2 max = pArray[0];
+
+	for (int i = 1; i < arrayCount; i++)
+	{
+		min.x = pArray[i].x < min.x ? pArray[i].x : min.x;
+		min.y = pArray[i].y < min.y ? pArray[i].y : min.y;
+		max.x = pArray[i].x > max.x ? pArray[i].x : max.x;
+		max.y = pArray[i].y > max.y ? pArray[i].y : max.y;
+	}
+
+	return Rectangle2D::FromMinToMax(min, max);
 }

@@ -13,6 +13,6 @@ public:
 public:
 	Vec2 GetMin() const;
 	Vec2 GetMax() const;
-	Rectangle2D FromMinToMax(const Vec2& min, const Vec2& max) const;
+	static Rectangle2D FromMinToMax(const Vec2& min, const Vec2& max);
 };
 

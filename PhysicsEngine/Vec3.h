@@ -37,3 +37,5 @@ public:
 	Vec3 Cross(const Vec3& right) const;
 	float Angle(const Vec3& right) const;
 };
+
+typedef Vec3 Point3D;

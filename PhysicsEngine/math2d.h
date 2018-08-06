@@ -35,6 +35,11 @@ bool CircleCircle(const Circle2D& c1, const Circle2D& c2);
 bool CircleRectangle(const Circle2D& circle, const Rectangle2D& rectangle);
 bool CircleOrientedRectangle(const Circle2D& circle, const OrientedRectangle2D& orientedRectangle);
 bool RectangleRectangle(const Rectangle2D& rect1, const Rectangle2D& rect2);
-bool RectangleToOrientedRectangle(const Rectangle2D& rect, const OrientedRectangle2D& orientedRectangle);
-bool OrientedRectangleToOrientedRectangle(const OrientedRectangle2D& orientedRectangle1, const OrientedRectangle2D& orientedRectangle2);
+
+Circle2D ContainingCircle(Point2D* pArray, int arrayCount);
+Rectangle2D ContainingRectangle(Point2D* pArray, int arrayCount);
+
+
+
+
 

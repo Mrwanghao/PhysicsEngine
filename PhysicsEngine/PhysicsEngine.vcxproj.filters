@@ -61,6 +61,21 @@
     <Filter Include="源文件\Geometry2D\math2d">
       <UniqueIdentifier>{aa5d77b7-a2b7-421e-9d9d-dfaff649c97c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Geometry2D\BoundingShape">
+      <UniqueIdentifier>{6ffd0e32-dca1-42ee-a6db-4857baac1cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D">
+      <UniqueIdentifier>{078b41f6-2907-486a-9423-f7233491dfec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\math3d">
+      <UniqueIdentifier>{3e09ed33-9c5f-47f5-a4d9-b613ef3b2cf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\Line3D">
+      <UniqueIdentifier>{4babbc10-c553-47c6-8dbe-f6179e2f7ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry2D\QuadTree">
+      <UniqueIdentifier>{0e096441-964a-43f8-b8b2-d355a86e67c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -102,6 +117,18 @@
     <ClCompile Include="math2d.cpp">
       <Filter>源文件\Geometry2D\math2d</Filter>
     </ClCompile>
+    <ClCompile Include="BoundingShape.cpp">
+      <Filter>源文件\Geometry2D\BoundingShape</Filter>
+    </ClCompile>
+    <ClCompile Include="math3d.cpp">
+      <Filter>源文件\Geometry3D\math3d</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>源文件\Geometry3D\Line3D</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>源文件\Geometry2D\QuadTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2.h">
@@ -139,6 +166,18 @@
     </ClInclude>
     <ClInclude Include="math2d.h">
       <Filter>源文件\Geometry2D\math2d</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingShape.h">
+      <Filter>源文件\Geometry2D\BoundingShape</Filter>
+    </ClInclude>
+    <ClInclude Include="math3d.h">
+      <Filter>源文件\Geometry3D\math3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>源文件\Geometry3D\Line3D</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>源文件\Geometry2D\QuadTree</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
