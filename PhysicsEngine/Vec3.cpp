@@ -23,12 +23,12 @@ Vec3 Vec3::operator*(float scale) const
 	return Vec3(x * scale, y * scale, z * scale);
 }
 
-bool Vec3::operator==(const Vec3 & right)
+bool Vec3::operator==(const Vec3 & right) const
 {
 	return x == right.x && y == right.y && z == right.z;
 }
 
-bool Vec3::operator!=(const Vec3 & right)
+bool Vec3::operator!=(const Vec3 & right) const
 {
 	return !(*this == right);
 }

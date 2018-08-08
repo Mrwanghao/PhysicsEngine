@@ -21,8 +21,8 @@ public:
 	Vec3 operator-(const Vec3& right) const;
 	Vec3 operator*(const Vec3& right) const;
 	Vec3 operator*(float scale) const;
-	bool operator==(const Vec3& right);
-	bool operator!=(const Vec3& right);
+	bool operator==(const Vec3& right) const;
+	bool operator!=(const Vec3& right) const;
 
 public:
 	Vec3();

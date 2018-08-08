@@ -76,6 +76,24 @@
     <Filter Include="源文件\Geometry2D\QuadTree">
       <UniqueIdentifier>{0e096441-964a-43f8-b8b2-d355a86e67c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Geometry3D\Ray">
+      <UniqueIdentifier>{3270a703-c39a-477a-82b7-a0faa79cca3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\Sphere">
+      <UniqueIdentifier>{3e094065-d0be-4221-b5b0-acc0dbb8d3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\AABB">
+      <UniqueIdentifier>{17b3e489-58ff-4d09-92d7-a52ce0d4b40e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\OBB">
+      <UniqueIdentifier>{ab880545-f34c-4974-a810-6d9ea32c3f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\Plane">
+      <UniqueIdentifier>{e80e60fc-e0d3-4803-8aa8-a964e6c47700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\Triangle">
+      <UniqueIdentifier>{a4c95018-5d10-45e3-a857-dbfb18b04ff3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -129,6 +147,24 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>源文件\Geometry2D\QuadTree</Filter>
     </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>源文件\Geometry3D\Ray</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>源文件\Geometry3D\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>源文件\Geometry3D\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="OBB.cpp">
+      <Filter>源文件\Geometry3D\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>源文件\Geometry3D\Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>源文件\Geometry3D\Triangle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2.h">
@@ -178,6 +214,24 @@
     </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>源文件\Geometry2D\QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>源文件\Geometry3D\Ray</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>源文件\Geometry3D\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>源文件\Geometry3D\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="OBB.h">
+      <Filter>源文件\Geometry3D\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>源文件\Geometry3D\Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>源文件\Geometry3D\Triangle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

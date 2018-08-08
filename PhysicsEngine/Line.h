@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Vec3.h"
-
+#include "MathUtil.h"
 
 class Line
 {
@@ -12,5 +12,8 @@ public:
 public:
 	Line();
 	Line(const Point3D& _start, const Point3D& _end);
+
+	inline float Getlength() const { return (end - start).Magnitude(); }
+	inline float GetLengthSq() const { return (end - start).MagnitudeSq(); }
 
 };
