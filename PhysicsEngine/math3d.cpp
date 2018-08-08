@@ -162,3 +162,42 @@ Point3D ClosestPointOnRay(const Ray & ray, const Point3D & point)
 	t = FMAXF(t, 0.0f);
 	return Point3D(ray.origin + ray.direction * t);
 }
+
+bool SphereSphere(const Sphere & s1, const Sphere & s2)
+{
+	float radiusSum = s1.radius + s2.radius;
+	float sqDistance = (s1.center - s2.center).MagnitudeSq();
+	return sqDistance < radiusSum * radiusSum;
+}
+
+bool SphereAABB(const Sphere & sphere, const AABB & aabb)
+{
+	Point3D closestPoint = ClosestPointInAABB(sphere.center, aabb);
+	float distance = (closestPoint - sphere.center).Magnitude();
+	return sphere.radius > distance;
+}
+
+bool SphereOBB(const Sphere & sphere, const OBB & obb)
+{
+	Point3D closestPoint = ClosestPointInOBB(obb, sphere.center);
+	float distanceSq = (sphere.center - closestPoint).MagnitudeSq();
+	float radiusSq = sphere.radius * sphere.radius;
+	return distanceSq < radiusSq;
+}
+
+bool SpherePlane(const Sphere & sphere, const Plane & plane)
+{
+	Point3D closestPoint = ClosestPointOnPlane(plane, sphere.center);
+	float distanceSq = (sphere.center - closestPoint).MagnitudeSq();
+	float radiusSq = sphere.radius * sphere.radius;
+	return distanceSq < radiusSq;
+}
+
+bool LinePlane(const Plane & plane, const Line & line)
+{
+	Vec3 ab = line.end - line.start;
+	float nA = plane.normal.Dot(line.start);
+	float nAB = plane.normal.Dot(ab);
+	float t = (plane.distance - nA) / nAB;
+	return t >= 0.0f && t <= 1.0f;
+}

@@ -25,3 +25,23 @@ Point3D ClosestPointOnLine(const Point3D& point, const Line& line);
 
 bool PointOnRay(const Point3D& point, const Ray& ray);
 Point3D ClosestPointOnRay(const Ray& ray, const Point3D& point);
+
+bool SphereSphere(const Sphere& s1, const Sphere& s2);
+bool SphereAABB(const Sphere& sphere, const AABB& aabb);
+bool SphereOBB(const Sphere& sphere, const OBB& obb);
+bool SpherePlane(const Sphere& sphere, const Plane& plane);
+
+
+
+
+bool LinePlane(const Plane& plane, const Line& line);
+
+
+
+
+
+
+
+
+
+
