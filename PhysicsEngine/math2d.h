@@ -4,13 +4,8 @@
 #include "Circle2D.h"
 #include "Rectangle2D.h"
 #include "OrientedRectangle2D.h"
+#include "Interval.h"
 
-class Interval2D
-{
-public:
-	float min;
-	float max;
-};
 
 Interval2D GetInterval(const Rectangle2D& rect, const Vec2& axis);
 bool OverlapOnAxis(const Rectangle2D& rect1, const Rectangle2D& rect2, const Vec2& axis);

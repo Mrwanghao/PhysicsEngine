@@ -1,4 +1,5 @@
 #include "MathUtil.h"
+#include <math.h>
 
 Matrix4 Translation(float _x, float _y, float _z)
 {
@@ -24,4 +25,16 @@ Matrix4 Scale(float _x, float _y, float _z)
 Vec3 GetScale(const Matrix4 & mat)
 {
 	return Vec3(mat.m00, mat.m11, mat.m22);
+}
+
+Matrix4 Projection(float fov, float near, float far, float aspect)
+{
+	Matrix4 projection;
+	
+	projection.m00 = 1 / (tan(fov * 0.5f) * aspect);
+	projection.m11 = 1 / tan(fov * 0.5f);
+	projection.m22 = far / (far - near);
+	projection.m32 = (near * far) / (near - far);
+	projection.m23 = 1.0f;
+	return projection;
 }

@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="BoundingShape.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle2D.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="Line2D.cpp" />
@@ -142,7 +143,9 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BoundingShape.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle2D.h" />
+    <ClInclude Include="Interval.h" />
     <ClInclude Include="Line.h" />
     <ClInclude Include="Line2D.h" />
     <ClInclude Include="math2d.h" />
