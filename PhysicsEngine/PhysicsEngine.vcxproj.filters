@@ -100,6 +100,12 @@
     <Filter Include="源文件\Camera">
       <UniqueIdentifier>{75fc05eb-94a3-4a94-aa69-410028291c7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Windows">
+      <UniqueIdentifier>{483783ea-9772-4ccb-8a06-8a69d678d42b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Instance">
+      <UniqueIdentifier>{947dc085-b214-459f-a971-d45ad6e6d5f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -174,6 +180,18 @@
     <ClCompile Include="Camera.cpp">
       <Filter>源文件\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="IWindow.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>源文件\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidbodyVolume.cpp">
+      <Filter>源文件\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManfold.cpp">
+      <Filter>源文件\Instance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix2.h">
@@ -247,6 +265,24 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>源文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="IWindow.h">
+      <Filter>源文件\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>源文件\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody.h">
+      <Filter>源文件\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidbodyVolume.h">
+      <Filter>源文件\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManfold.h">
+      <Filter>源文件\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineDefine.h">
+      <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

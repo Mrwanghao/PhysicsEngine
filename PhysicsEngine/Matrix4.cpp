@@ -38,6 +38,24 @@ Matrix4 & Matrix4::operator*(float scale)
 	return result;
 }
 
+Matrix4 Matrix4::operator*(const Matrix4 & right) const
+{
+	Matrix4 result;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			float temp = 0.0f;
+			for (int index = 0; index < 4; index++)
+			{
+				temp += data[i * 4 + index] * right.data[index * 4 + j];
+			}
+			result.data[i * 4 + j] = temp;
+		}
+	}
+	return result;
+}
+
 Matrix4 Matrix4::Transpose() const
 {
 	Matrix4 result;

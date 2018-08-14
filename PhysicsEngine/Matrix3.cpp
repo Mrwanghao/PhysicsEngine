@@ -32,6 +32,24 @@ Matrix3 & Matrix3::operator*(float scale)
 	return result;
 }
 
+Matrix3 Matrix3::operator*(const Matrix3 & right) const
+{
+	Matrix3 result;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			float temp = 0.0f;
+			for (int index = 0; index < 3; index++)
+			{
+				temp += data[i * 3 + index] * right.data[index * 3 + j];
+			}
+			result.data[i * 3 + j] = temp;
+		}
+	}
+	return result;
+}
+
 Matrix3 Matrix3::Transpose() const
 {
 	Matrix3 result;

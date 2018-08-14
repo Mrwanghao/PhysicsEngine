@@ -26,6 +26,7 @@ public:
 public:
 	inline float* operator[](int index) { return &(data[index * 4]); }
 	Matrix4& operator*(float scale);
+	Matrix4 operator*(const Matrix4& right) const;
 public:
 	Matrix4 Transpose() const;
 	float Determinant() const;

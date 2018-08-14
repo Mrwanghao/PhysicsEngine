@@ -318,7 +318,8 @@ bool OverlapOnAxis(const OBB & obb, const Triangle & triangle, const Vec3 & axis
 {
 	Interval2D a = GetInterval(obb, axis);
 	Interval2D b = GetInterval(triangle, axis);
-	return ((b.min <= a.max) && (a.min <= b.max));
+	return ((b.min <= a.max) && (a.min <= b.max));
+
 }
 
 bool TriangleOBB(const Triangle & triangle, const OBB & obb)
@@ -375,7 +376,8 @@ bool OverlapOnAxis(const Triangle & t1, const Triangle & t2, const Vec3 & axis)
 {
 	Interval2D a = GetInterval(t1, axis);
 	Interval2D b = GetInterval(t2, axis);
-	return ((b.min <= a.max) && (a.min <= b.max));
+	return ((b.min <= a.max) && (a.min <= b.max));
+
 }
 
 bool Linetest(const Triangle & triangle, const Line & line)
@@ -385,6 +387,11 @@ bool Linetest(const Triangle & triangle, const Line & line)
 	ray.direction = (line.end - line.start).GetNormalized();
 	float t = Raycast(triangle, ray);
 	return t >= 0 && t * t <= LengthSq(line);
+}
+
+Vec3 Barycentric(const Point3D & point, const Triangle & triangle)
+{
+	return Vec3();
 }
 
 bool TriangleTriangle(const Triangle & t1, const Triangle & t2)

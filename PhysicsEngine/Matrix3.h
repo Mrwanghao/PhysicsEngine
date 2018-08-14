@@ -25,6 +25,7 @@ public:
 public:
 	inline float* operator[](int index) { return &(data[index * 3]); }
 	Matrix3& operator*(float scale);
+	Matrix3 operator*(const Matrix3& right) const;
 public:
 	Matrix3 Transpose() const;
 	float Determinant() const;

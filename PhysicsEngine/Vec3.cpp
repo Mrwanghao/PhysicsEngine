@@ -33,6 +33,15 @@ bool Vec3::operator!=(const Vec3 & right) const
 	return !(*this == right);
 }
 
+Vec3 Vec3::operator*(const Matrix4 & mat) const
+{
+	Vec3 result;
+	result.x = x * mat.m00 + y * mat.m10 + z * mat.m20 + 0.0f * mat.m30;
+	result.y = x * mat.m01 + y * mat.m11 + z * mat.m21 + 0.0f * mat.m31;
+	result.z = x * mat.m02 + y * mat.m12 + z * mat.m22 + 0.0f * mat.m32;
+	return result;
+}
+
 Vec3::Vec3()
 	:
 	x(0.0f),
