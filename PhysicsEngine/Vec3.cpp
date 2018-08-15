@@ -107,3 +107,10 @@ float Vec3::Angle(const Vec3 & right) const
 	float m = Magnitude() * right.Magnitude();
 	return acos(Dot(right) / m);
 }
+
+Vec3 Vec3::Project(const Vec3 & right)
+{
+	float dot = Dot(right);
+	float magSq = right.MagnitudeSq();
+	return right * (dot / magSq);
+}

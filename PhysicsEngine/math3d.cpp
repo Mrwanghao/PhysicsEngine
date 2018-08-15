@@ -369,10 +369,10 @@ bool TrianglePlane(const Triangle & triangle, const Plane & plane);
 		return false;
 	}
 	
-	return true; // Intersection
+	return true; 
 }
 
-bool OverlapOnAxis(const Triangle & t1, const Triangle & t2, const Vec3 & axis)
+bool OverlapOnAxis(const Triangle& t1, const Triangle& t2, const Vec3& axis)
 {
 	Interval2D a = GetInterval(t1, axis);
 	Interval2D b = GetInterval(t2, axis);
@@ -391,7 +391,185 @@ bool Linetest(const Triangle & triangle, const Line & line)
 
 Vec3 Barycentric(const Point3D & point, const Triangle & triangle)
 {
-	return Vec3();
+	Vec3 ap = point - t.a;
+	Vec3 bp = point - t.b;
+	Vec3 cp = point - t.c;
+	
+	Vec3 ab = triangle.b - triangle.a;
+	Vec3 ac = triangle.c - triangle.a;
+	Vec3 bc = triangle.c - triangle.b;
+	Vec3 cb = triangle.b - triangle.c;
+	Vec3 ca = triangle.a - triangle.c;
+
+	Vec3 v = ab - ab.Project(cb);
+	float a = 1.0f - v.Dot(ap) / v.Dot(ab);
+
+	v = bc - bc.Project(ac);
+	float b = 1.0f - v.Dot(bp) / v.Dot(bc);
+
+	v = ca - ca.Project(ab);
+	float c = 1.0f - v.Dot(cp) / v.Dot(ca);
+
+	return Vec3(a, b, c);
+}
+
+std::vector<Point3D> GetVertices(const OBB & obb)
+{
+	std::vector<Point3D> v;
+	v.resize(8);
+	Vec3 C = obb.origin;
+	Vec3 E = obb.size;
+	const float* orientation = obb.orientation.data;
+
+	Vec3 A[] = 
+	{
+		Vec3(orientation[0], orientation[3], orientation[6]),
+		Vec3(orientation[1], orientation[4], orientation[7]),
+		Vec3(orientation[2], orientation[5], orientation[8])
+	};
+
+	v[0] = C + A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	v[1] = C - A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
+	v[2] = C + A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+	v[3] = C + A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	v[4] = C - A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	v[5] = C + A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
+	v[6] = C - A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
+	v[7] = C - A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
+
+	return v;
+}
+
+std::vector<Line> GetEdges(const OBB & obb)
+{
+	std::vector<Line> result;
+	result.reserve(12);
+	std::vector<Point3D> v = GetVertices(obb);
+
+	int index[][2] = { // Indices of edges
+		{ 6, 1 },{ 6, 3 },{ 6, 4 },{ 2, 7 },{ 2, 5 },{ 2, 0 },
+	{ 0, 1 },{ 0, 3 },{ 7, 1 },{ 7, 4 },{ 4, 5 },{ 5, 3 }
+	};
+
+	for (int j = 0; j < 12; ++j) {
+		result.push_back(Line(
+			v[index[j][0]], v[index[j][1]]
+		));
+	}
+
+	return result;
+}
+
+std::vector<Plane> GetPlane(const OBB & obb)
+{
+	Vec3 c = obb.origin;	// OBB Center
+	Vec3 e = obb.size;		// OBB Extents
+	const float* o = obb.orientation.data;
+	Vec3 a[] = {			// OBB Axis
+		Vec3(o[0], o[3], o[6]),
+		Vec3(o[1], o[4], o[7]),
+		Vec3(o[2], o[5], o[8]),
+	};
+
+	std::vector<Plane> result;
+	result.resize(6);
+
+	result[0] = Plane(a[0]		  , a[0].Dot((c + a[0] * e.x)));
+	result[1] = Plane(a[0] * -1.0f, -a[0].Dot((c - a[0] * e.x)));
+	result[2] = Plane(a[1]        , a[1].Dot((c + a[1] * e.y)));
+	result[3] = Plane(a[1] * -1.0f, -a[1].Dot((c - a[1] * e.y)));
+	result[4] = Plane(a[2]        , a[2].Dot((c + a[2] * e.z)));
+	result[5] = Plane(a[2] * -1.0f, -a[2].Dot((c - a[2] * e.z)));
+
+	return result;
+}
+
+CollisionManifold FindCollisionFeatures(const Sphere & A, const Sphere & B)
+{
+	CollisionManifold result;
+	result.Reset();
+
+	Sphere s1(A.center, A.radius);
+	Sphere s2(B.center, B.radius);
+
+	if (!SphereSphere(s1, s2))
+		return result;
+
+	const float* o1 = A.orientation.data;
+	const float* o2 = B.orientation.data;
+
+	Vec3 test[15] = 
+	{
+		Vec3(o1[0], o1[3], o1[6]),
+		Vec3(o1[1], o1[4], o1[7]),
+		Vec3(o1[2], o1[5], o1[8]),
+		Vec3(o2[0], o2[3], o2[6]),
+		Vec3(o2[1], o2[4], o2[7]),
+		Vec3(o2[2], o2[5], o2[8])
+	};
+
+	for (int i = 0; i < 3; ++i) { // Fill out rest of axis
+		test[6 + i * 3 + 0] = test[i + 3].Cross(test[0]);
+		test[6 + i * 3 + 1] = test[i + 3].Cross(test[1]);
+		test[6 + i * 3 + 2] = test[i + 3].Cross(test[2]);
+	}
+
+	Vec3* hitNormal = 0;
+	bool shouldFlip;
+
+	for (int i = 0; i < 15; ++i) {
+		if (test[i].x < 0.000001f) test[i].x = 0.0f;
+		if (test[i].y < 0.000001f) test[i].y = 0.0f;
+		if (test[i].z < 0.000001f) test[i].z = 0.0f;
+		if (test[i].MagnitudeSq() < 0.001f) {
+			continue;
+		}
+
+		float depth = PenetrationDepth(A, B, test[i], &shouldFlip);
+		if (depth <= 0.0f) {
+			return result;
+		}
+		else if (depth < result.depth) {
+			if (shouldFlip) {
+				test[i] = test[i] * -1.0f;
+			}
+			result.depth = depth;
+			hitNormal = &test[i];
+		}
+	}
+
+	if (hitNormal == 0) {
+		return result;
+	}
+	vec3 axis = Normalized(*hitNormal);
+
+	std::vector<Point3D> c1 = ClipEdgesToOBB(GetEdges(B), A);
+	std::vector<Point3D> c2 = ClipEdgesToOBB(GetEdges(A), B);
+	result.contacts.reserve(c1.size() + c2.size());
+	result.contacts.insert(result.contacts.end(), c1.begin(), c1.end());
+	result.contacts.insert(result.contacts.end(), c2.begin(), c2.end());
+
+	Interval2D i = GetInterval(A, axis);
+	float distance = (i.max - i.min)* 0.5f - result.depth * 0.5f;
+	vec3 pointOnPlane = A.position + axis * distance;
+
+	for (int i = result.contacts.size() - 1; i >= 0; --i) {
+		Vec3 contact = result.contacts[i];
+		result.contacts[i] = contact + (axis * axis.Dot(pointOnPlane - contact));
+
+		// This bit is in the "There is more" section of the book
+		for (int j = result.contacts.size() - 1; j > i; --j) {
+			if ((result.contacts[j] - result.contacts[i]).MagnitudeSq()< 0.0001f) {
+				result.contacts.erase(result.contacts.begin() + j);
+				break;
+			}
+		}
+	}
+
+	result.colliding = true;
+	result.normal = axis;
+
+	return result;
 }
 
 bool TriangleTriangle(const Triangle & t1, const Triangle & t2)
@@ -411,7 +589,7 @@ bool TriangleTriangle(const Triangle & t1, const Triangle & t2)
 		t2_f0.Cross(t1_f2), t2_f1.Cross(t1_f0),
 		t2_f1.Cross(t1_f1), t2_f1.Cross(t1_f2),
 		t2_f2.Cross(t1_f0), t2_f2.Cross(t1_f1),
-		t2_f2.Cross(t1_f2),
+		t2_f2.Cross(t1_f2)
 	};
 
 	for (int i = 0; i < 11; ++i) {

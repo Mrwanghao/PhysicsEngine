@@ -10,6 +10,7 @@
 #include "Line.h"
 #include "Ray.h"
 #include "Triangle.h"
+#include "CollisionManfold.h"
 
 
 bool PointInSphere(const Point3D& point, const Sphere& sphere);
@@ -70,10 +71,20 @@ bool OverlapOnAxis(const Triangle& t1, const Triangle& t2, const Vec3& axis);
 bool TriangleTriangle(const Triangle& t1, const Triangle& t2);
 
 bool Linetest(const Triangle& triangle, const Line& line);
+
+//ÇóÖØÐÄ
 Vec3 Barycentric(const Point3D& point, const Triangle& triangle);
 
+std::vector<Point3D> GetVertices(const OBB& obb);
+std::vector<Line> GetEdges(const OBB& obb);
+std::vector<Plane> GetPlane(const OBB& obb);
 
+CollisionManifold FindCollisionFeatures(const Sphere& A, const Sphere& B);
+CollisionManifold FindCollisionFeatures(const OBB& A, const Sphere& B);
+CollisionManifold FindCollisionFeatures(const OBB& A, const OBB& B);
 
+float Classify(const AABB& aabb, const Plane& plane);
+float Classify(const OBB& obb, const Plane& plane);
 
 
 

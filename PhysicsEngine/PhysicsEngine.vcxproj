@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="BaseMod.cpp" />
     <ClCompile Include="BoundingShape.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle2D.cpp" />
@@ -133,9 +134,12 @@
     <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="OBB.cpp" />
     <ClCompile Include="OrientedRectangle2D.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Raycast.cpp" />
+    <ClCompile Include="RaycastResult.cpp" />
     <ClCompile Include="Rectangle2D.cpp" />
     <ClCompile Include="RigidbodyVolume.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -146,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="BaseMod.h" />
     <ClInclude Include="BoundingShape.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle2D.h" />
@@ -164,9 +169,12 @@
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="OBB.h" />
     <ClInclude Include="OrientedRectangle2D.h" />
+    <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="Raycast.h" />
+    <ClInclude Include="RaycastResult.h" />
     <ClInclude Include="Rectangle2D.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="RigidbodyVolume.h" />

@@ -103,8 +103,14 @@
     <Filter Include="源文件\Windows">
       <UniqueIdentifier>{483783ea-9772-4ccb-8a06-8a69d678d42b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Instance">
+    <Filter Include="源文件\Geometry2D\RaycastResult">
+      <UniqueIdentifier>{0e5c34b0-7c04-4ef3-89a2-417d40f2bb6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Physics">
       <UniqueIdentifier>{947dc085-b214-459f-a971-d45ad6e6d5f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Mods">
+      <UniqueIdentifier>{cfd9bff8-ba10-45e0-ac94-6a8517bff077}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -184,13 +190,25 @@
       <Filter>源文件\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="RigidbodyVolume.cpp">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManfold.cpp">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="RaycastResult.cpp">
+      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+    </ClCompile>
+    <ClCompile Include="Raycast.cpp">
+      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>源文件\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMod.cpp">
+      <Filter>源文件\Mods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -270,19 +288,31 @@
       <Filter>源文件\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Rigidbody.h">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClInclude>
     <ClInclude Include="RigidbodyVolume.h">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClInclude>
     <ClInclude Include="CollisionManfold.h">
-      <Filter>源文件\Instance</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClInclude>
     <ClInclude Include="EngineDefine.h">
       <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RaycastResult.h">
+      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+    </ClInclude>
+    <ClInclude Include="Raycast.h">
+      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>源文件\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMod.h">
+      <Filter>源文件\Mods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

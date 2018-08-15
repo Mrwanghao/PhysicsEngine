@@ -36,6 +36,8 @@ public:
 	Vec3 GetNormalized() const;
 	Vec3 Cross(const Vec3& right) const;
 	float Angle(const Vec3& right) const;
+
+	Vec3 Project(const Vec3& right);
 };
 
 typedef Vec3 Point3D;
