@@ -4,7 +4,8 @@
 
 OrientedRectangle2D::OrientedRectangle2D()
 	:
-	halfExtents(0.5f, 0.5f)
+	halfExtents(1.0f, 1.0f),
+	rotation(0.0f)
 {
 }
 

@@ -1,7 +1,8 @@
 #include "RigidbodyVolume.h"
 #include "EngineDefine.h"
 #include "math3d.h"
-
+#include "OBB.h"
+#include "draw.h"
 
 void RigidbodyVolume::Render()
 {
@@ -10,7 +11,7 @@ void RigidbodyVolume::Render()
 		//::Render(sphere);
 	}
 	else if (type == BOX) {
-		//::Render(box);
+		RenderOBB(box);
 	}
 }
 
@@ -143,47 +144,107 @@ void RigidbodyVolume::AddRotationalImpulse(const Vec3& point, const Vec3& impuls
 	Vec3 angleVelocity = torque * InvTensor();
 	angVelocity = angVelocity + angleVelocity;
 
-
 }
 
+CollisionManifold FindCollisionFeatures(RigidbodyVolume & ra, RigidbodyVolume & rb)
+{
+	CollisionManifold result;
+	result.Reset();
+	if (ra.type == SPHERE) {
+		if (rb.type == SPHERE) {
+			result = FindCollisionFeatures(ra.sphere, rb.sphere);
+		}
+		else if (rb.type == BOX) {
+			result = FindCollisionFeatures(rb.box, ra.sphere);
+			result.normal = result.normal * -1.0f;
+		}
+	}
+	else if (ra.type == BOX) {
+		if (rb.type == BOX) {
+			result = FindCollisionFeatures(ra.box, rb.box);
+		}
+		else if (rb.type == SPHERE) {
+			result = FindCollisionFeatures(ra.box, rb.sphere);
+		}
+	}
+	return result;
+}
 
+void ApplyImpulse(RigidbodyVolume & A, RigidbodyVolume & B, const CollisionManifold & M, int c)
+{
+	float invMass1 = A.InvMass();
+	float invMass2 = B.InvMass();
+	float invMassSum = invMass1 + invMass2;
 
+	if (invMassSum == 0.0f) {
+		return; 
+	}
 
+	Vec3 r1 = M.contacts[c] - A.position;
+	Vec3 r2 = M.contacts[c] - B.position;
+	Matrix4 i1 = A.InvTensor();
+	Matrix4 i2 = B.InvTensor();
 
+	Vec3 relativeVel = (B.velocity + B.angVelocity.Cross(r2)) - (A.velocity + A.angVelocity.Cross(r1));
+	Vec3 relativeNorm = M.normal;
+	relativeNorm.Normalize();
+	if (relativeVel.Dot(relativeNorm) > 0.0f) {
+		return;
+	}
 
+	float e = fminf(A.cor, B.cor);
 
+	float numerator = (-(1.0f + e) * relativeVel.Dot(relativeNorm));
+	float d1 = invMassSum;
+	Vec3 d2 = MultiplyVector(r1.Cross(relativeNorm), i1).Cross(r1);
+	Vec3 d3 = MultiplyVector(r2.Cross(relativeNorm), i2).Cross(r2);
+	float denominator = d1 + relativeNorm.Dot(d2 + d3);
+	float j = (denominator == 0.0f) ? 0.0f : numerator / denominator;
+	if (M.contacts.size() > 0.0f && j != 0.0f) {
+		j /= (float)M.contacts.size();
+	}
 
+	Vec3 impulse = relativeNorm * j;
+	A.velocity = A.velocity - impulse * invMass1;
+	B.velocity = B.velocity + impulse * invMass2;
 
+	A.angVelocity = A.angVelocity - MultiplyVector(r1.Cross(impulse), i1);
+	B.angVelocity = B.angVelocity + MultiplyVector(r2.Cross(impulse), i2);
 
+	Vec3 t = relativeVel - (relativeNorm * relativeVel.Dot(relativeNorm));
+	if (compare(t.MagnitudeSq(), 0.0f)) {
+		return;
+	}
+	t.Normalize();
 
+	numerator = -relativeVel.Dot(t);
+	d1 = invMassSum;
+	d2 = MultiplyVector(r1.Cross(t), i1).Cross(r1);
+	d3 = MultiplyVector(r2.Cross(t), i2).Cross(r2);
+	denominator = d1 + t.Dot(d2 + d3);
 
+	float jt = (denominator == 0.0f) ? 0.0f : numerator / denominator;
+	if (M.contacts.size() > 0.0f && jt != 0.0f) {
+		jt /= (float)M.contacts.size();
+	}
 
+	if (compare(jt, 0.0f)) {
+		return;
+	}
 
+	Vec3 tangentImpuse;
+	float friction = sqrtf(A.friction * B.friction);
+	if (jt > j * friction) {
+		jt = j * friction;
+	}
+	else if (jt < -j * friction) {
+		jt = -j * friction;
+	}
+	tangentImpuse = t * jt;
 
+	A.velocity = A.velocity - tangentImpuse * invMass1;
+	B.velocity = B.velocity + tangentImpuse * invMass2;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	A.angVelocity = A.angVelocity - MultiplyVector(r1.Cross(tangentImpuse), i1);
+	B.angVelocity = B.angVelocity + MultiplyVector(r2.Cross(tangentImpuse), i2);
+}

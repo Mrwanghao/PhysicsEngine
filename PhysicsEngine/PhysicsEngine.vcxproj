@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{22A76BD1-6E5B-47EA-ACE8-087CF6A2C79D}</ProjectGuid>
     <RootNamespace>PhysicsEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -69,14 +69,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)Dependencies\glfw\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\glfw\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -118,9 +125,17 @@
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="BaseMod.cpp" />
     <ClCompile Include="BoundingShape.cpp" />
+    <ClCompile Include="BVHNode.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Circle2D.cpp" />
     <ClCompile Include="CollisionManfold.cpp" />
+    <ClCompile Include="CubeMod.cpp" />
+    <ClCompile Include="draw.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="glad\glad.c" />
+    <ClCompile Include="GLWindow.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="OrbitCamera.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="IWindow.cpp" />
     <ClCompile Include="Line.cpp" />
@@ -147,15 +162,25 @@
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Vec3.cpp" />
     <ClCompile Include="Vec4.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="BaseMod.h" />
     <ClInclude Include="BoundingShape.h" />
+    <ClInclude Include="BVHNode.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Circle2D.h" />
     <ClInclude Include="CollisionManfold.h" />
+    <ClInclude Include="CubeMod.h" />
+    <ClInclude Include="draw.h" />
     <ClInclude Include="EngineDefine.h" />
+    <ClInclude Include="Frustum.h" />
+    <ClInclude Include="glad\glad.h" />
+    <ClInclude Include="glad\khrplatform.h" />
+    <ClInclude Include="GLWindow.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="OrbitCamera.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="IWindow.h" />
@@ -183,6 +208,7 @@
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="Vec4.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

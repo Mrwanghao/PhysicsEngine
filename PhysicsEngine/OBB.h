@@ -10,7 +10,6 @@ public:
 	Vec3 size;
 	Matrix3 orientation;
 
-
 public:
 	OBB();
 	OBB(const Point3D& _origin, const Vec3& _size);

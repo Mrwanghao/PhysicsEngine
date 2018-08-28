@@ -16,7 +16,7 @@ public:
 	};
 
 public:
-	inline float& operator[](int index) { return data[index]; }
+	inline const float& operator[](int index) { return data[index]; }
 	Vec3 operator+(const Vec3& right) const;
 	Vec3 operator-(const Vec3& right) const;
 	Vec3 operator*(const Vec3& right) const;

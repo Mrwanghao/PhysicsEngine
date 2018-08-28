@@ -16,7 +16,7 @@ public:
 	void Reset();
 };
 
-
+void Reset(RaycastResult* result);
 
 
 

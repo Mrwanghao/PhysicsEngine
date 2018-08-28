@@ -9,7 +9,7 @@ public:
 		struct
 		{
 			float m00, m01,
-				m10, m11;
+				  m10, m11;
 		};
 		float data[4];
 	};

@@ -27,18 +27,6 @@ Vec3 GetScale(const Matrix4 & mat)
 	return Vec3(mat.m00, mat.m11, mat.m22);
 }
 
-Matrix4 Projection(float fov, float near, float far, float aspect)
-{
-	Matrix4 projection;
-	
-	projection.m00 = 1 / (tan(fov * 0.5f) * aspect);
-	projection.m11 = 1 / tan(fov * 0.5f);
-	projection.m22 = far / (far - near);
-	projection.m32 = (near * far) / (near - far);
-	projection.m23 = 1.0f;
-	return projection;
-}
-
 Matrix4 Ortho(float left, float right, float bottom, float top, float zNear, float zFar)
 {
 	float _11 = 2.0f / (right - left);
@@ -59,15 +47,13 @@ Matrix4 Ortho(float left, float right, float bottom, float top, float zNear, flo
 Matrix4 Transform(const Vec3 & scale, const Vec3 & eulerRotation, const Vec3 & translate)
 {
 	return Scale(scale.x, scale.y, scale.z) *
-		Rot(eulerRotation.x,
-			eulerRotation.y,
-			eulerRotation.z) *
+		Rot(eulerRotation.x, eulerRotation.y, eulerRotation.z) *
 		Translation(translate.x, translate.y, translate.z);
 }
 
 Matrix4 Transform(const Vec3 & scale, const Vec3 & rotationAxis, float rotationAngle, const Vec3 & translate)
 {
-	return Scale(scale.x, scale.y, scale.z) *
+	return Scale(scale.x, scale.y, scale.z) * 
 		AxisAngle(rotationAxis, rotationAngle) *
 		Translation(translate.x, translate.y, translate.z);
 }
@@ -93,9 +79,9 @@ Vec3 MultiplyVector(const Vec3 & vec, const Matrix4 & mat)
 Vec3 MultiplyVector(const Vec3 & vec, const Matrix3 & mat)
 {
 	Vec3 result;
-	result.x = vec.Dot(Vec3(mat.m00, mat.m01, mat.m02));
-	result.y = vec.Dot(Vec3(mat.m10, mat.m11, mat.m12));
-	result.z = vec.Dot(Vec3(mat.m20, mat.m21, mat.m22));
+	result.x = vec.Dot(Vec3(mat.m00, mat.m10, mat.m20));
+	result.y = vec.Dot(Vec3(mat.m01, mat.m11, mat.m21));
+	result.z = vec.Dot(Vec3(mat.m02, mat.m12, mat.m22));
 	return result;
 }
 
@@ -122,7 +108,7 @@ Matrix4 Rot(float pitch, float yaw, float roll)
 
 Matrix3 Rot3x3(float pitch, float yaw, float roll)
 {
-	return RotZ3x3(yaw) *
+	return RotZ3x3(roll) *
 		RotX3x3(pitch) *
 		RotY3x3(yaw);
 }
@@ -142,9 +128,9 @@ Matrix4 RotY(float angle)
 {
 	angle = DEG2RAD(angle);
 	return Matrix4(
-		cosf(angle), 0.0f, -sinf(angle), 0.0f,
+		cosf(angle), 0.0f, sinf(angle), 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
-		sinf(angle), 0.0f, cosf(angle), 0.0f,
+		-sinf(angle), 0.0f, cosf(angle), 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 }
@@ -174,9 +160,9 @@ Matrix3 RotY3x3(float angle)
 {
 	angle = DEG2RAD(angle);
 	return Matrix3(
-		cosf(angle), 0.0f, -sinf(angle),
+		cosf(angle), 0.0f, sinf(angle),
 		0.0f, 1.0f, 0.0f,
-		sinf(angle), 0.0f, cosf(angle)
+		-sinf(angle), 0.0f, cosf(angle)
 	);
 }
 
@@ -199,12 +185,12 @@ Matrix4 AxisAngle(const Vec3 & axis, float angle)
 	float x = axis.x;
 	float y = axis.y;
 	float z = axis.z;
-	if (!(axis.MagnitudeSq() == 1.0f)) {
+	if (!compare(axis.MagnitudeSq(), 1.0f)) {
 		float inv_len = 1.0f / axis.Magnitude();
-		x *= inv_len; // Normalize x
-		y *= inv_len; // Normalize y
-		z *= inv_len; // Normalize z
-	} // x, y, and z are a normalized vector
+		x *= inv_len; 
+		y *= inv_len; 
+		z *= inv_len; 
+	} 
 	return Matrix4(
 		t*(x*x) + c, t*x*y + s * z, t*x*z - s * y, 0.0f,
 		t*x*y - s * z, t*(y*y) + c, t*y*z + s * x, 0.0f,
@@ -223,7 +209,7 @@ Matrix3 AxisAngle3x3(const Vec3 & axis, float angle)
 	float x = axis.x;
 	float y = axis.y;
 	float z = axis.z;
-	if (!(axis.MagnitudeSq() == 1.0f)) {
+	if (!compare(axis.MagnitudeSq(), 1.0f)) {
 		float inv_len = 1.0f / axis.Magnitude();
 		x *= inv_len;
 		y *= inv_len;

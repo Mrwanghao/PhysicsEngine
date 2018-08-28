@@ -1,20 +1,19 @@
 #pragma once
 #include "Rigidbody.h"
 
-
-
-
 class Particle : public Rigidbody
 {
 	Vec3 position;
 	Vec3 prevPosition;
+
 	Vec3 forces;
 	Vec3 gravity;
+
 	Vec3 velocity;
 	float friction;
 	float bounce;
-	float mass;
 
+	float mass;
 
 	Particle();
 

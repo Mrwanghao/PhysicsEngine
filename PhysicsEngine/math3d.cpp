@@ -3,11 +3,11 @@
 
 #include "math2d.h"
 
-float kSholdValue = 0.00001f;
+float kSholdValue = 0.000001f;
 
 bool PointInSphere(const Point3D & point, const Sphere & sphere)
 {
-	float magSq = (point - sphere.center).Magnitude();
+	float magSq = (point - sphere.center).MagnitudeSq();
 	float radSq = sphere.radius * sphere.radius;
 	return magSq < radSq;
 }
@@ -58,6 +58,13 @@ Point3D ClosestPointInAABB(const Point3D & point, const AABB & aabb)
 bool PointInOBB(const Point3D & point, const OBB & obb)
 {
 	Vec3 direction = point - obb.origin;
+	const float* o = obb.orientation.data;
+	Vec3 axis[] =
+	{
+		Vec3(o[0], o[1], o[2]),
+		Vec3(o[3], o[4], o[5]),
+		Vec3(o[6], o[7], o[8])
+	};
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -76,7 +83,6 @@ bool PointInOBB(const Point3D & point, const OBB & obb)
 			return false;
 		}
 	}
-
 	return true;
 }
 
@@ -87,15 +93,12 @@ Point3D ClosestPointInOBB(const OBB & obb, const Point3D & point)
 
 	for (int i = 0; i < 3; ++i) {
 		const float* orientation = &obb.orientation.data[i * 3];
-
-		Vec3 axis(
-			orientation[0],
-			orientation[1],
-			orientation[2]);
+		//每次循环到x y z axis
+		Vec3 axis(orientation[0], orientation[1], orientation[2]);
 
 		float distance = dir.Dot(axis);
 
-		if (distance >obb.size.data[i]) 
+		if (distance > obb.size.data[i]) 
 		{
 			distance = obb.size.data[i];
 		}
@@ -113,7 +116,7 @@ Point3D ClosestPointInOBB(const OBB & obb, const Point3D & point)
 bool PointOnPlane(const Point3D & point, const Plane & plane)
 {
 	float dt = point.Dot(plane.normal);
-	return dt - plane.distance == 0.0f;
+	return compare(dt - plane.distance, 0.0f);
 }
 
 Point3D ClosestPointOnPlane(const Plane & plane, const Point3D & point)
@@ -127,15 +130,15 @@ bool PointOnLine(const Point3D & point, const Line & line)
 {
 	Point3D closest = ClosestPointOnLine(point, line);
 	float distanceSq = (closest - point).Magnitude();
-	return distanceSq == 0.0f;
+	return compare(distanceSq, 0.0f);
 }
 
 Point3D ClosestPointOnLine(const Point3D & point, const Line & line)
 {
 	Vec3 lVec = line.end - line.start; 
 	float t = (point - line.start).Dot(lVec) / lVec.Dot(lVec);
-	t = FMAXF(t, 0.0f); 
-	t = FMAXF(t, 1.0f); 
+	t = fmaxf(t, 0.0f); 
+	t = fmaxf(t, 1.0f); 
 	return line.start + lVec * t;
 }
 
@@ -150,7 +153,7 @@ bool PointOnRay(const Point3D & point, const Ray & ray)
 	normal.Normalize();
 
 	float diff = normal.Dot(ray.direction);
-	return diff == 1.0f; 
+	return compare(diff, 1.0f); 
 }
 
 Point3D ClosestPointOnRay(const Ray & ray, const Point3D & point)
@@ -170,8 +173,8 @@ bool SphereSphere(const Sphere & s1, const Sphere & s2)
 bool SphereAABB(const Sphere & sphere, const AABB & aabb)
 {
 	Point3D closestPoint = ClosestPointInAABB(sphere.center, aabb);
-	float distance = (closestPoint - sphere.center).Magnitude();
-	return sphere.radius > distance;
+	float distancesq = (closestPoint - sphere.center).MagnitudeSq();
+	return sphere.radius * sphere.radius > distancesq;
 }
 
 bool SphereOBB(const Sphere & sphere, const OBB & obb)
@@ -198,9 +201,10 @@ bool AABBAABB(const AABB & aabb1, const AABB & aabb2)
 	Point3D bMin = aabb2.GetMin();
 	Point3D bMax = aabb2.GetMax();
 	
-	return (aMin.x <= bMax.x && aMax.x >= bMin.x) &&
-	(aMin.y <= bMax.y && aMax.y >= bMin.y) &&
-	(aMin.z <= bMax.z && aMax.z >= bMin.z);
+	return 
+		(aMin.x <= bMax.x && aMax.x >= bMin.x) &&
+		(aMin.y <= bMax.y && aMax.y >= bMin.y) &&
+		(aMin.z <= bMax.z && aMax.z >= bMin.z);
 }
 
 Interval2D GetInterval(const AABB& aabb, const Vec3& axis)
@@ -220,12 +224,11 @@ Interval2D GetInterval(const AABB& aabb, const Vec3& axis)
 
 	Interval2D result;
 	result.min = result.max = axis.Dot(vertex[0]);
-	for (int i = 1; i < 8; ++i) {
+	for (int i = 1; i < 8; ++i) 
+	{
 		float projection = axis.Dot(vertex[i]);
-		result.min = (projection < result.min) ?
-			projection : result.min;
-		result.max = (projection > result.max) ?
-			projection : result.max;
+		result.min = (projection < result.min) ? projection : result.min;
+		result.max = (projection > result.max) ? projection : result.max;
 	}
 	return result;
 }
@@ -234,10 +237,10 @@ Interval2D GetInterval(const OBB& obb, const Vec3& axis)
 {
 	Vec3 vertex[8];
 	
-	Vec3 C = obb.origin; // OBB Center
-	Vec3 E = obb.size; // OBB Extents
+	Vec3 C = obb.origin; 
+	Vec3 E = obb.size;
 	const float* o = obb.orientation.data;
-	Vec3 A[] = { // OBB Axis
+	Vec3 A[] = { 
 		Vec3(o[0], o[1], o[2]),
 		Vec3(o[3], o[4], o[5]),
 		Vec3(o[6], o[7], o[8]),
@@ -256,10 +259,8 @@ Interval2D GetInterval(const OBB& obb, const Vec3& axis)
 	result.min = result.max = axis.Dot(vertex[0]);
 	for (int i = 1; i < 8; ++i) {
 		float projection = axis.Dot(vertex[i]);
-		result.min = (projection < result.min) ?
-			projection : result.min;
-		result.max = (projection > result.max) ?
-			projection : result.max;
+		result.min = (projection < result.min) ? projection : result.min;
+		result.max = (projection > result.max) ? projection : result.max;
 	}
 	return result;
 }
@@ -334,9 +335,9 @@ bool TriangleOBB(const Triangle & triangle, const OBB & obb)
 	Vec3 u2(orientation[6], orientation[7], orientation[8]);
 
 	Vec3 test[13] = {
-		u0, // OBB Axis 1
-		u1, // OBB Axis 2
-		u2, // OBB Axis 3
+		u0, 
+		u1, 
+		u2, 
 		f0.Cross(f1),
 		u0.Cross(f0), u0.Cross(f1), u0.Cross(f2),
 		u1.Cross(f0), u1.Cross(f1), u1.Cross(f2),
@@ -344,20 +345,20 @@ bool TriangleOBB(const Triangle & triangle, const OBB & obb)
 	};
 
 	for (int i = 0; i < 13; ++i) {
-
 		if (!OverlapOnAxis(obb, triangle, test[i])) {
 			return false;
 		}
-		return true;
+	}
+	return true;
 }
 
-bool TrianglePlane(const Triangle & triangle, const Plane & plane);
+bool TrianglePlane(const Triangle & triangle, const Plane& plane)
 {
 	float side1 = plane.PlaneEquation(triangle.a);
 	float side2 = plane.PlaneEquation(triangle.b);
 	float side3 = plane.PlaneEquation(triangle.c);
 	
-	if (side1 == 0 && side2 ==0 && side3 == 0) {
+	if (compare(side1, 0.0f) && compare(side2, 0.0f) && compare(side3, 0.0f)) {
 		return true;
 	}
 	
@@ -377,7 +378,55 @@ bool OverlapOnAxis(const Triangle& t1, const Triangle& t2, const Vec3& axis)
 	Interval2D a = GetInterval(t1, axis);
 	Interval2D b = GetInterval(t2, axis);
 	return ((b.min <= a.max) && (a.min <= b.max));
+}
 
+Vec3 SatCrossEdge(const Vec3 & a, const Vec3 & b, const Vec3 & c, const Vec3 & d)
+{
+	Vec3 ab = a - b;
+	Vec3 cd = c - d;
+	Vec3 result = ab.Cross(cd);
+
+	if (!compare(result.MagnitudeSq(), 0.0f)) 
+	{
+		return result; 
+	}
+	else 
+	{ 
+		Vec3 axis = ab.Cross(c - a);
+		result = ab.Cross(axis);
+		
+		if (!compare(result.MagnitudeSq(), 0.0f)) 
+		{
+			return result;
+		}
+	}
+	return Vec3();
+}
+
+bool TriangleTriangleRobust(const Triangle & t1, const Triangle & t2)
+{
+	Vec3 axisToTest[] = {
+		SatCrossEdge(t1.a, t1.b, t1.b, t1.c),
+		SatCrossEdge(t2.a, t2.b, t2.b, t2.c),
+		SatCrossEdge(t2.a, t2.b, t1.a, t1.b),
+		SatCrossEdge(t2.a, t2.b, t1.b, t1.c),
+		SatCrossEdge(t2.a, t2.b, t1.c, t1.a),
+		SatCrossEdge(t2.b, t2.c, t1.a, t1.b),
+		SatCrossEdge(t2.b, t2.c, t1.b, t1.c),
+		SatCrossEdge(t2.b, t2.c, t1.c, t1.a),
+		SatCrossEdge(t2.c, t2.a, t1.a, t1.b),
+		SatCrossEdge(t2.c, t2.a, t1.b, t1.c),
+		SatCrossEdge(t2.c, t2.a, t1.c, t1.a),
+	};
+	
+	for (int i = 0; i < 11; ++i) {
+		if (!OverlapOnAxis(t1, t2, axisToTest[i])) {
+			if (!compare(axisToTest[i].MagnitudeSq(), 0)) {
+				return false; 
+			}
+		}
+	}
+	return true; 
 }
 
 bool Linetest(const Triangle & triangle, const Line & line)
@@ -385,15 +434,15 @@ bool Linetest(const Triangle & triangle, const Line & line)
 	Ray ray;
 	ray.origin = line.start;
 	ray.direction = (line.end - line.start).GetNormalized();
-	float t = Raycast(triangle, ray);
-	return t >= 0 && t * t <= LengthSq(line);
+	float t = RayCast(triangle, ray);
+	return t >= 0 && t * t <= line.GetLengthSq();
 }
 
 Vec3 Barycentric(const Point3D & point, const Triangle & triangle)
 {
-	Vec3 ap = point - t.a;
-	Vec3 bp = point - t.b;
-	Vec3 cp = point - t.c;
+	Vec3 ap = point - triangle.a;
+	Vec3 bp = point - triangle.b;
+	Vec3 cp = point - triangle.c;
 	
 	Vec3 ab = triangle.b - triangle.a;
 	Vec3 ac = triangle.c - triangle.a;
@@ -413,163 +462,26 @@ Vec3 Barycentric(const Point3D & point, const Triangle & triangle)
 	return Vec3(a, b, c);
 }
 
-std::vector<Point3D> GetVertices(const OBB & obb)
+
+bool ClipToPlane(const Plane & plane, const Line & line, Point3D * outPoint)
 {
-	std::vector<Point3D> v;
-	v.resize(8);
-	Vec3 C = obb.origin;
-	Vec3 E = obb.size;
-	const float* orientation = obb.orientation.data;
-
-	Vec3 A[] = 
-	{
-		Vec3(orientation[0], orientation[3], orientation[6]),
-		Vec3(orientation[1], orientation[4], orientation[7]),
-		Vec3(orientation[2], orientation[5], orientation[8])
-	};
-
-	v[0] = C + A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
-	v[1] = C - A[0] * E[0] + A[1] * E[1] + A[2] * E[2];
-	v[2] = C + A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
-	v[3] = C + A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
-	v[4] = C - A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
-	v[5] = C + A[0] * E[0] - A[1] * E[1] - A[2] * E[2];
-	v[6] = C - A[0] * E[0] + A[1] * E[1] - A[2] * E[2];
-	v[7] = C - A[0] * E[0] - A[1] * E[1] + A[2] * E[2];
-
-	return v;
-}
-
-std::vector<Line> GetEdges(const OBB & obb)
-{
-	std::vector<Line> result;
-	result.reserve(12);
-	std::vector<Point3D> v = GetVertices(obb);
-
-	int index[][2] = { // Indices of edges
-		{ 6, 1 },{ 6, 3 },{ 6, 4 },{ 2, 7 },{ 2, 5 },{ 2, 0 },
-	{ 0, 1 },{ 0, 3 },{ 7, 1 },{ 7, 4 },{ 4, 5 },{ 5, 3 }
-	};
-
-	for (int j = 0; j < 12; ++j) {
-		result.push_back(Line(
-			v[index[j][0]], v[index[j][1]]
-		));
+	Vec3 ab = line.end - line.start;
+	float nAB = plane.normal.Dot(ab);
+	if (nAB == 0) {
+		return false;
 	}
 
-	return result;
-}
+	float nA = plane.normal.Dot(line.start);
+	float t = (plane.distance - nA) / nAB;
 
-std::vector<Plane> GetPlane(const OBB & obb)
-{
-	Vec3 c = obb.origin;	// OBB Center
-	Vec3 e = obb.size;		// OBB Extents
-	const float* o = obb.orientation.data;
-	Vec3 a[] = {			// OBB Axis
-		Vec3(o[0], o[3], o[6]),
-		Vec3(o[1], o[4], o[7]),
-		Vec3(o[2], o[5], o[8]),
-	};
+	if (t >= 0.0f && t <= 1.0f) {
+		if (outPoint != 0) {
+			*outPoint = line.start + ab * t;
 
-	std::vector<Plane> result;
-	result.resize(6);
-
-	result[0] = Plane(a[0]		  , a[0].Dot((c + a[0] * e.x)));
-	result[1] = Plane(a[0] * -1.0f, -a[0].Dot((c - a[0] * e.x)));
-	result[2] = Plane(a[1]        , a[1].Dot((c + a[1] * e.y)));
-	result[3] = Plane(a[1] * -1.0f, -a[1].Dot((c - a[1] * e.y)));
-	result[4] = Plane(a[2]        , a[2].Dot((c + a[2] * e.z)));
-	result[5] = Plane(a[2] * -1.0f, -a[2].Dot((c - a[2] * e.z)));
-
-	return result;
-}
-
-CollisionManifold FindCollisionFeatures(const Sphere & A, const Sphere & B)
-{
-	CollisionManifold result;
-	result.Reset();
-
-	Sphere s1(A.center, A.radius);
-	Sphere s2(B.center, B.radius);
-
-	if (!SphereSphere(s1, s2))
-		return result;
-
-	const float* o1 = A.orientation.data;
-	const float* o2 = B.orientation.data;
-
-	Vec3 test[15] = 
-	{
-		Vec3(o1[0], o1[3], o1[6]),
-		Vec3(o1[1], o1[4], o1[7]),
-		Vec3(o1[2], o1[5], o1[8]),
-		Vec3(o2[0], o2[3], o2[6]),
-		Vec3(o2[1], o2[4], o2[7]),
-		Vec3(o2[2], o2[5], o2[8])
-	};
-
-	for (int i = 0; i < 3; ++i) { // Fill out rest of axis
-		test[6 + i * 3 + 0] = test[i + 3].Cross(test[0]);
-		test[6 + i * 3 + 1] = test[i + 3].Cross(test[1]);
-		test[6 + i * 3 + 2] = test[i + 3].Cross(test[2]);
-	}
-
-	Vec3* hitNormal = 0;
-	bool shouldFlip;
-
-	for (int i = 0; i < 15; ++i) {
-		if (test[i].x < 0.000001f) test[i].x = 0.0f;
-		if (test[i].y < 0.000001f) test[i].y = 0.0f;
-		if (test[i].z < 0.000001f) test[i].z = 0.0f;
-		if (test[i].MagnitudeSq() < 0.001f) {
-			continue;
-		}
-
-		float depth = PenetrationDepth(A, B, test[i], &shouldFlip);
-		if (depth <= 0.0f) {
-			return result;
-		}
-		else if (depth < result.depth) {
-			if (shouldFlip) {
-				test[i] = test[i] * -1.0f;
-			}
-			result.depth = depth;
-			hitNormal = &test[i];
+			return true;
 		}
 	}
-
-	if (hitNormal == 0) {
-		return result;
-	}
-	vec3 axis = Normalized(*hitNormal);
-
-	std::vector<Point3D> c1 = ClipEdgesToOBB(GetEdges(B), A);
-	std::vector<Point3D> c2 = ClipEdgesToOBB(GetEdges(A), B);
-	result.contacts.reserve(c1.size() + c2.size());
-	result.contacts.insert(result.contacts.end(), c1.begin(), c1.end());
-	result.contacts.insert(result.contacts.end(), c2.begin(), c2.end());
-
-	Interval2D i = GetInterval(A, axis);
-	float distance = (i.max - i.min)* 0.5f - result.depth * 0.5f;
-	vec3 pointOnPlane = A.position + axis * distance;
-
-	for (int i = result.contacts.size() - 1; i >= 0; --i) {
-		Vec3 contact = result.contacts[i];
-		result.contacts[i] = contact + (axis * axis.Dot(pointOnPlane - contact));
-
-		// This bit is in the "There is more" section of the book
-		for (int j = result.contacts.size() - 1; j > i; --j) {
-			if ((result.contacts[j] - result.contacts[i]).MagnitudeSq()< 0.0001f) {
-				result.contacts.erase(result.contacts.begin() + j);
-				break;
-			}
-		}
-	}
-
-	result.colliding = true;
-	result.normal = axis;
-
-	return result;
+	return false;
 }
 
 bool TriangleTriangle(const Triangle & t1, const Triangle & t2)
@@ -577,10 +489,10 @@ bool TriangleTriangle(const Triangle & t1, const Triangle & t2)
 	Vec3 t1_f0 = t1.b - t1.a;
 	Vec3 t1_f1 = t1.c - t1.b;
 	Vec3 t1_f2 = t1.a - t1.c;
-	
-	Vec3 t2_f0 = t2.b - t2.a; 
-	Vec3 t2_f1 = t2.c - t2.b; 
-	Vec3 t2_f2 = t2.a - t2.c; 
+
+	Vec3 t2_f0 = t2.b - t2.a;
+	Vec3 t2_f1 = t2.c - t2.b;
+	Vec3 t2_f2 = t2.a - t2.c;
 
 	Vec3 axisToTest[] = {
 		t1_f0.Cross(t1_f1),
@@ -594,10 +506,11 @@ bool TriangleTriangle(const Triangle & t1, const Triangle & t2)
 
 	for (int i = 0; i < 11; ++i) {
 		if (!OverlapOnAxis(t1, t2, axisToTest[i])) {
-			return false; 
+			return false;
 		}
 	}
-	return true; 
+	return true;
+}
 
 bool OverlapOnAxis(const AABB& aabb, const OBB& obb, const Vec3& axis) 
 {
@@ -623,10 +536,9 @@ bool AABBOBB(const AABB& aabb, const OBB& obb)
 		Vec3(o[0], o[1], o[2]),
 		Vec3(o[3], o[4], o[5]),
 		Vec3(o[6], o[7], o[8])
-
 	};
 
-	for (int i = 0; i < 3; ++i) { // Fill out rest of axis
+	for (int i = 0; i < 3; ++i) { 
 		test[6 + i * 3 + 0] = test[i + 3].Cross(test[0]);
 		test[6 + i * 3 + 1] = test[i + 3].Cross(test[1]);
 		test[6 + i * 3 + 2] = test[i + 3].Cross(test[2]);
@@ -665,7 +577,7 @@ bool OBBOBB(const OBB & obb1, const OBB & obb2)
 		Vec3(o2[6], o2[7], o2[8])
 	};
 	
-	for (int i = 0; i < 3; ++i) { // Fill out rest of axis
+	for (int i = 0; i < 3; ++i) { 
 		test[6 + i * 3 + 0] = test[i + 3].Cross(test[0]);
 		test[6 + i * 3 + 1] = test[i + 3].Cross(test[1]);
 		test[6 + i * 3 + 2] = test[i + 3].Cross(test[2]);
@@ -682,7 +594,7 @@ bool OBBOBB(const OBB & obb1, const OBB & obb2)
 bool OBBPlane(const OBB & obb, const Plane & plane)
 {
 	const float* o = obb.orientation.data;
-	Vec3 rot[] = { // rotation / orientation
+	Vec3 rot[] = { 
 		Vec3(o[0], o[1], o[2]),
 		Vec3(o[3], o[4], o[5]),
 		Vec3(o[6], o[7], o[8]),
@@ -690,8 +602,8 @@ bool OBBPlane(const OBB & obb, const Plane & plane)
 	Vec3 normal = plane.normal;
 	
 	float pLen = obb.size.x * fabsf(normal.Dot(rot[0])) +
-		obb.size.y * fabsf(normal.Dot(rot[1])) +
-		obb.size.z * fabsf(normal.Dot(rot[2]));
+				 obb.size.y * fabsf(normal.Dot(rot[1])) +
+				 obb.size.z * fabsf(normal.Dot(rot[2]));
 
 	float dot = plane.normal.Dot(obb.origin);
 	float dist = dot - plane.distance;
@@ -702,7 +614,7 @@ bool OBBPlane(const OBB & obb, const Plane & plane)
 bool PlanePlane(const Plane & plane1, const Plane & plane2)
 {
 	Vec3 d = plane1.normal.Cross(plane2.normal);
-	return d.Dot(d) != 0; 
+	return !compare(d.Dot(d), 0.0f); 
 }
 
 float RayCast(const Sphere & sphere, const Ray & ray)
@@ -719,7 +631,7 @@ float RayCast(const Sphere & sphere, const Ray & ray)
 	{
 		return -1; 
 	}
-	else if (esq<rsq) 
+	else if (esq < rsq) 
 	{
 		return a + f; 
 	}
@@ -732,9 +644,6 @@ float RayCast(const AABB & aabb, const Ray & ray)
 	Vec3 min = aabb.GetMin();
 	Vec3 max = aabb.GetMax();
 	
-	// NOTE: Any component of direction could be 0!
-	// to avoid a division by 0, you need to add
-	// additional safety checks.
 	float t1;
 	float t2;
 	float t3;
@@ -790,15 +699,15 @@ float RayCast(const AABB & aabb, const Ray & ray)
 		fmaxf(t5, t6)
 	);
 	
-	if (tmax< 0) {
-		return -1;
+	if (tmax < 0) {
+		return -1.0f;
 	}
 	
-	if (tmin>tmax) {
-		return -1;
+	if (tmin > tmax) {
+		return -1.0f;
 	}
 	
-	if (tmin< 0.0f) {
+	if (tmin < 0.0f) {
 		return tmax;
 	}
 	return tmin;
@@ -816,21 +725,19 @@ float RayCast(const OBB & obb, const Ray & ray)
 	
 	Vec3 p = obb.origin - ray.origin;
 	
-	Vec3 f(
-		X.Dot(ray.direction),
-		Y.Dot(ray.direction),
-		Z.Dot(ray.direction)
-	);
+	//方向旋转
+	Vec3 f(X.Dot(ray.direction), Y.Dot(ray.direction), Z.Dot(ray.direction));
 	
+	//起点旋转
 	Vec3 e(X.Dot(p), Y.Dot(p), Z.Dot(p));
 	
 	float t[6] = { 0, 0, 0, 0, 0, 0 };
 	for (int i = 0; i < 3; ++i) {
-		if (f[i] == 0.0f) {
+		if (f.data[i] == 0.0f) {
 			if (-e[i] - size[i]>0 || -e[i] + size[i]<0) {
-				return -1;
+				return -1.0f;
 			}
-			f[i] = 0.00001f; 
+			f.data[i] = 0.00001f; 
 		}
 		t[i * 2 + 0] = (e[i] + size[i]) / f[i]; 
 		t[i * 2 + 1] = (e[i] - size[i]) / f[i]; 
@@ -883,6 +790,25 @@ float RayCast(const Plane & plane, const Ray & ray)
 	return -1.0f;
 }
 
+float RayCast(const Triangle & triangle, const Ray & ray)
+{
+	Plane plane = FromTriangle(triangle);
+	float t = RayCast(plane, ray);
+	if (t < 0.0f) {
+		return t;
+	}
+	
+	Point3D result = ray.origin + ray.direction * t;
+	Vec3 barycentric = Barycentric(result, triangle);
+	if (barycentric.x >= 0.0f && barycentric.x <= 1.0f &&
+		barycentric.y >= 0.0f && barycentric.y <= 1.0f &&
+		barycentric.z >= 0.0f && barycentric.z <= 1.0f) {
+		
+		return t;
+	}
+	return -1.0f;
+}
+
 bool Linetest(const Sphere & sphere, const Line & line)
 {
 	Point3D closestPoint = ClosestPointOnLine(sphere.center, line);
@@ -896,7 +822,7 @@ bool Linetest(const OBB & obb, const Line & line)
 	ray.origin = line.start;
 	ray.direction = (line.end - line.start).GetNormalized();
 	float t = RayCast(obb, ray);
-	return t >= 0.0f && t <= (line.end - line.start).MagnitudeSq();
+	return t >= 0.0f && t * t <= (line.end - line.start).MagnitudeSq();
 }
 
 bool Linetest(const AABB & aabb, const Line & line)
@@ -905,13 +831,13 @@ bool Linetest(const AABB & aabb, const Line & line)
 	ray.origin = line.start;
 	ray.direction = (line.end - line.start).GetNormalized();
 	float t = RayCast(aabb, ray);
-	return t >= 0.0f && t <= (line.end - line.start).MagnitudeSq();
+	return t >= 0.0f && t * t <= (line.end - line.start).MagnitudeSq();
 }
 
 bool Linetest(const Plane & plane, const Line & line)
 {
 	Vec3 ab = line.end - line.start;
-	float na = plane.normal.Dot(ab);
+	float na = plane.normal.Dot(line.start);
 	float nab = plane.normal.Dot(ab);
 	
 	float t = (plane.distance - na) / nab;
@@ -921,32 +847,31 @@ bool Linetest(const Plane & plane, const Line & line)
 
 bool PointInTriangle(const Point3D & point, const Triangle & triangle)
 {
-	Vec3 a = triangle.a - point;
-	Vec3 b = triangle.b - point;
-	Vec3 c = triangle.c - point;
+	Vec3 v0 = triangle.c - triangle.a;
+	Vec3 v1 = triangle.b - triangle.a;
+	Vec3 v2 = point - triangle.a;
 
-	Vec3 normalPBC = b.Cross(c);
-	Vec3 normalPCA = c.Cross(a);
-	Vec3 normalPAB = a.Cross(b);
+	float dot00 = v0.Dot(v0);
+	float dot01 = v0.Dot(v1);
+	float dot02 = v0.Dot(v2);
+	float dot11 = v1.Dot(v1);
+	float dot12 = v1.Dot(v2);
 
-	if (normalPBC.Dot(normalPCA) < 0.0f)
+	float inverDeno = 1 / (dot00 * dot11 - dot01 * dot01);
+
+	float u = (dot11 * dot02 - dot01 * dot12) * inverDeno;
+	if (u < 0 || u > 1) 
 	{
 		return false;
 	}
-	else if (normalPBC.Dot(normalPAB) < 0.0f)
+
+	float v = (dot00 * dot12 - dot01 * dot02) * inverDeno;
+	if (v < 0 || v > 1) 
 	{
 		return false;
 	}
 
-	return true;
-}
-
-Plane FromTriangle(const Triangle & triangle)
-{
-	Plane plane;
-	plane.normal = (triangle.b - triangle.a).Cross(triangle.c - triangle.a).GetNormalized();
-	plane.distance = plane.normal.Dot(triangle.a);
-	return plane;
+	return u + v <= 1.0f;
 }
 
 Point3D ClosestPointInTriangle(const Triangle & triangle, const Point3D & point)
@@ -957,13 +882,15 @@ Point3D ClosestPointInTriangle(const Triangle & triangle, const Point3D & point)
 		return point;
 	}
 
-	Point3D c1 = ClosestPointOnLine(point, Line(triangle.a, triangle.b));
-	Point3D c2 = ClosestPointOnLine(point, Line(triangle.b, triangle.c));
-	Point3D c3 = ClosestPointOnLine(point, Line(triangle.c, triangle.a));
+	Point3D closestPoint = ClosestPointOnPlane(plane, point);
 
-	float magsq1 = (point - c1).Magnitude();
-	float magsq2 = (point - c2).Magnitude();
-	float magsq3 = (point - c3).Magnitude();
+	Point3D c1 = ClosestPointOnLine(closestPoint, Line(triangle.a, triangle.b));
+	Point3D c2 = ClosestPointOnLine(closestPoint, Line(triangle.b, triangle.c));
+	Point3D c3 = ClosestPointOnLine(closestPoint, Line(triangle.c, triangle.a));
+
+	float magsq1 = (closestPoint - c1).Magnitude();
+	float magsq2 = (closestPoint - c2).Magnitude();
+	float magsq3 = (closestPoint - c3).Magnitude();
 
 	if (magsq1 < magsq2 && magsq1 < magsq3)
 	{
@@ -975,6 +902,14 @@ Point3D ClosestPointInTriangle(const Triangle & triangle, const Point3D & point)
 	}
 
 	return c3;
+}
+
+Plane FromTriangle(const Triangle & triangle)
+{
+	Plane plane;
+	plane.normal = (triangle.b - triangle.a).Cross(triangle.c - triangle.a).GetNormalized();
+	plane.distance = plane.normal.Dot(triangle.a);
+	return plane;
 }
 
 bool TriangleShpere(const Triangle & triangle, const Sphere & sphere)

@@ -64,12 +64,12 @@ bool Raycast(const AABB & aabb, const Ray & ray, RaycastResult & result)
 
 	float t[] = {0, 0, 0, 0, 0, 0};
 	
-	t[0] = (min.x - ray.origin.x) / (ray.direction.x == 0.0f ? 0.00001f : ray.direction.x);
-	t[1] = (max.x - ray.origin.x) / (ray.direction.x == 0.0f ? 0.00001f : ray.direction.x);
-	t[2] = (min.y - ray.origin.y) / (ray.direction.y == 0.0f ? 0.00001f : ray.direction.y);
-	t[3] = (max.y - ray.origin.y) / (ray.direction.y == 0.0f ? 0.00001f : ray.direction.y);
-	t[4] = (min.z - ray.origin.z) / (ray.direction.z == 0.0f ? 0.00001f : ray.direction.z);
-	t[5] = (max.z - ray.origin.z) / (ray.direction.z == 0.0f ? 0.00001f : ray.direction.z);
+	t[0] = (min.x - ray.origin.x) / (ray.direction.x == 0.0f ? 0.0000001f : ray.direction.x);
+	t[1] = (max.x - ray.origin.x) / (ray.direction.x == 0.0f ? 0.0000001f : ray.direction.x);
+	t[2] = (min.y - ray.origin.y) / (ray.direction.y == 0.0f ? 0.0000001f : ray.direction.y);
+	t[3] = (max.y - ray.origin.y) / (ray.direction.y == 0.0f ? 0.0000001f : ray.direction.y);
+	t[4] = (min.z - ray.origin.z) / (ray.direction.z == 0.0f ? 0.0000001f : ray.direction.z);
+	t[5] = (max.z - ray.origin.z) / (ray.direction.z == 0.0f ? 0.0000001f : ray.direction.z);
 
 	float tmin = fmaxf(fmaxf(fminf(t[0], t[1]), fminf(t[2], t[3])), fminf(t[4], t[5]));
 	float tmax = fminf(fminf(fmaxf(t[0], t[1]), fmaxf(t[2], t[3])), fmaxf(t[4], t[5]));
@@ -109,7 +109,7 @@ bool Raycast(const AABB & aabb, const Ray & ray, RaycastResult & result)
 	//找到自己的那个法线
 	for (int i = 0; i < 6; i++)
 	{
-		if (t_result == t[i])
+		if (compare(t_result, t[i]))
 		{
 			result.normal = normals[i];
 		}
@@ -121,16 +121,16 @@ bool Raycast(const AABB & aabb, const Ray & ray, RaycastResult & result)
 bool Raycast(const OBB & obb, const Ray & ray, RaycastResult & result)
 {
 	const float* oriented = obb.orientation.data;
-	const float* size = obb.size.data;
-	Vec3 p = obb.origin - ray.origin;
+	 
+	Vec3 p = ray.origin - obb.origin;
 
 	//行向量
-	Vec3 X(oriented[0], oriented[3], oriented[6]);
-	Vec3 Y(oriented[1], oriented[4], oriented[7]);
-	Vec3 Z(oriented[2], oriented[5], oriented[8]);
+	Vec3 X(oriented[0], oriented[1], oriented[2]);
+	Vec3 Y(oriented[3], oriented[4], oriented[5]);
+	Vec3 Z(oriented[6], oriented[7], oriented[8]);
 
 	//将射线方向转变到obb局部坐标系下
-	Vec3 f(X.Dot(ray.direction), Y.Dot(ray.direction), Z.Dot(ray.direction));
+	Vec3 f = Vec3(X.Dot(ray.direction), Y.Dot(ray.direction), Z.Dot(ray.direction));
 
 	//将起点转变到obb局部坐标系下
 	Vec3 e(X.Dot(p), Y.Dot(p), Z.Dot(p));
@@ -139,14 +139,14 @@ bool Raycast(const OBB & obb, const Ray & ray, RaycastResult & result)
 	for (int i = 0; i < 3; ++i) {
 		if (f[i] == 0) {
 			//  左边界大于他的起点     ||  右边界 小于 它的起点
-			if (-e[i] - size[i] > 0 || -e[i] + size[i] < 0) {
+			if (-e[i] - obb.size.data[i] > 0 || -e[i] + obb.size.data[i] < 0) {
 				return false;
 			}
 			//仍然需要初始化一个极小值
-			f[i] = 0.00001f; 
+			f.data[i] = 0.0000001f; 
 		}
-		t[i * 2 + 0] = (e[i] + size[i]) / f[i];
-		t[i * 2 + 1] = (e[i] - size[i]) / f[i];
+		t[i * 2 + 0] = (e[i] + obb.size.data[i]) / f[i];
+		t[i * 2 + 1] = (e[i] - obb.size.data[i]) / f[i];
 	}
 	
 	//和aabb一样
@@ -182,7 +182,7 @@ bool Raycast(const OBB & obb, const Ray & ray, RaycastResult & result)
 	};
 
 	for (int i = 0; i < 6; ++i) {
-		if (t_result == t[i]) {
+		if (compare(t_result, t[i])) {
 			result.normal = normals[i].GetNormalized();
 		}
 	}
@@ -212,7 +212,7 @@ bool Raycast(const Triangle & triangle, const Ray & ray, RaycastResult & result)
 
 		result.t = t;
 		result.hit = true;
-		result.point = ray.origin + ray.direction*t;
+		result.point = ray.origin + ray.direction *t;
 		result.normal = plane.normal;
 
 		return true;

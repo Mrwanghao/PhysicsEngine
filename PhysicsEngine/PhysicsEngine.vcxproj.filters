@@ -103,14 +103,23 @@
     <Filter Include="源文件\Windows">
       <UniqueIdentifier>{483783ea-9772-4ccb-8a06-8a69d678d42b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Geometry2D\RaycastResult">
-      <UniqueIdentifier>{0e5c34b0-7c04-4ef3-89a2-417d40f2bb6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\Physics">
       <UniqueIdentifier>{947dc085-b214-459f-a971-d45ad6e6d5f4}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Mods">
       <UniqueIdentifier>{cfd9bff8-ba10-45e0-ac94-6a8517bff077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\Mesh">
+      <UniqueIdentifier>{8f1019d4-727a-4ec9-ae75-b3b78bd8f27e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\BVHNode">
+      <UniqueIdentifier>{18c42e9e-75c4-4c26-b5aa-3cfe114f79d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Geometry3D\RaycastResult">
+      <UniqueIdentifier>{0e5c34b0-7c04-4ef3-89a2-417d40f2bb6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\glad">
+      <UniqueIdentifier>{05c48b2d-35c2-4282-bcc7-bb9968183be6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -199,16 +208,43 @@
       <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="RaycastResult.cpp">
-      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+      <Filter>源文件\Geometry3D\RaycastResult</Filter>
     </ClCompile>
     <ClCompile Include="Raycast.cpp">
-      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+      <Filter>源文件\Geometry3D\RaycastResult</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="BaseMod.cpp">
       <Filter>源文件\Mods</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>源文件\Geometry3D\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="OrbitCamera.cpp">
+      <Filter>源文件\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="BVHNode.cpp">
+      <Filter>源文件\Geometry3D\BVHNode</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMod.cpp">
+      <Filter>源文件\Mods</Filter>
+    </ClCompile>
+    <ClCompile Include="glad\glad.c">
+      <Filter>源文件\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="GLWindow.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>源文件\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="draw.cpp">
+      <Filter>源文件\glad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -303,16 +339,46 @@
       <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="RaycastResult.h">
-      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+      <Filter>源文件\Geometry3D\RaycastResult</Filter>
     </ClInclude>
     <ClInclude Include="Raycast.h">
-      <Filter>源文件\Geometry2D\RaycastResult</Filter>
+      <Filter>源文件\Geometry3D\RaycastResult</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
       <Filter>源文件\Physics</Filter>
     </ClInclude>
     <ClInclude Include="BaseMod.h">
       <Filter>源文件\Mods</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>源文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>源文件\Geometry3D\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitCamera.h">
+      <Filter>源文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="BVHNode.h">
+      <Filter>源文件\Geometry3D\BVHNode</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMod.h">
+      <Filter>源文件\Mods</Filter>
+    </ClInclude>
+    <ClInclude Include="glad\glad.h">
+      <Filter>源文件\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="glad\khrplatform.h">
+      <Filter>源文件\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWindow.h">
+      <Filter>源文件\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>源文件\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="draw.h">
+      <Filter>源文件\glad</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

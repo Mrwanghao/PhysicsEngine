@@ -12,6 +12,6 @@ public:
 	Plane(const Vec3& _normal, float _distance);
 	~Plane();
 
-	float PlaneEquation(const Point3D& _point);
+	float PlaneEquation(const Point3D& _point) const;
 };
 

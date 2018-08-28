@@ -33,7 +33,7 @@ public:
 		:
 		cor(0.5f),
 		mass(1.0f),
-		friction(0.5f)
+		friction(0.6f)
 	{
 		type = BASE;
 	}
@@ -57,8 +57,6 @@ public:
 	void SynchCollisionVolumes();
 	virtual void AddLinearImpulse(const Vec3& impulse);
 	virtual void AddRotationalImpulse(const Vec3& point, const Vec3& impulse);
-
-
 
 };
 

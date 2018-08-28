@@ -5,6 +5,7 @@
 #include "Rectangle2D.h"
 #include "OrientedRectangle2D.h"
 #include "Interval.h"
+#include "BoundingShape.h"
 
 
 Interval2D GetInterval(const Rectangle2D& rect, const Vec2& axis);
@@ -33,7 +34,7 @@ bool RectangleRectangle(const Rectangle2D& rect1, const Rectangle2D& rect2);
 
 Circle2D ContainingCircle(Point2D* pArray, int arrayCount);
 Rectangle2D ContainingRectangle(Point2D* pArray, int arrayCount);
-
+bool PointInShape(const BoundingShape& shape, const Point2D& point);
 
 
 

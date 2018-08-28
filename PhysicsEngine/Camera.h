@@ -1,24 +1,8 @@
 #pragma once
 #include "Matrix4.h"
 #include "Plane.h"
+#include "Frustum.h"
 
-class Frustum {
-public:
-	union {
-		struct {
-			Plane top;
-			Plane bottom;
-			Plane left;
-			Plane right;
-			Plane _near;
-			Plane _far;
-		};
-		Plane planes[6];
-	};
-
-	Frustum() { }
-	~Frustum() {}
-};
 
 class Camera
 {
@@ -38,15 +22,17 @@ public:
 	Camera();
 	virtual ~Camera();
 
-	Matrix4 GetWorldMat();
-	Matrix4 GetViewMat();
+	inline Matrix4 GetWorldMat() { return worldMat; }
+	Matrix4 GetViewMat();//就是摄像机的世界矩阵的逆矩阵
 	inline Matrix4 GetProjMat() { return projectionMat; }
 
-	inline void SetProjMat(const Matrix4& _projMat) { projectionMat = _projMat; }
-	inline void SetWorldMat(const Matrix4& _worldMat) { worldMat = _worldMat; }
+	void SetProjection(const Matrix4& projection);
+	void SetWorld(const Matrix4& view);
+
 	inline float GetAspect() { return aspect; }
-	bool IsOrthographic() { return cameraType == 1; }
-	bool IsPerspective() { return cameraType == 0; }
+	inline bool IsOrthographic() { return cameraType == 1; }
+	inline bool IsPerspective() { return cameraType == 0; }
+
 	bool IsOrthoNormal();
 	void OrthoNormalize();
 	void Resize(int width, int height);
@@ -55,8 +41,7 @@ public:
 	void Orthographic(float width, float height,
 		float zNear, float zFar);
 
-	void SetProjection(const Matrix4& projection);
-	void SetWorld(const Matrix4& view);
+	
 
 	Frustum GetFrustum();
 
@@ -64,3 +49,5 @@ public:
 
 Camera CreatePerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane);
 Camera CreateOrthographic(float width, float height, float nearPlane, float farPlane);
+
+

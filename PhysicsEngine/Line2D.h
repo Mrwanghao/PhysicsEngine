@@ -12,6 +12,6 @@ public:
 	Line2D(const Point2D& _start, const Point2D& _end);
 
 public:
-	float Length() const;
-	float LengthSq() const;
+	inline float Length() const { return (end - start).Magnitude(); }
+	inline float LengthSq() const { return (end - start).MagnitudeSq(); }
 };

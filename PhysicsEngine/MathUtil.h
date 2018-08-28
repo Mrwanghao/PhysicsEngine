@@ -2,6 +2,15 @@
 
 #include "Vec3.h"
 #include "Matrix4.h"
+#include <math.h>
+#include <float.h>
+
+inline bool compare(double x, double y)
+{
+	return fabsf(x - y) <= FLT_EPSILON * fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y)));
+}
+
+#define clamp(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 #define RAD2DEG(x) ((x) * 57.295754f)
 #define DEG2RAD(x) ((x) * 0.0174533f)
@@ -40,3 +49,5 @@ Matrix4 Transform(const Vec3& scale, const Vec3& rotationAxis, float rotationAng
 Vec3 MultiplyPoint(const Vec3& vec, const Matrix4& mat);
 Vec3 MultiplyVector(const Vec3& vec, const Matrix4& mat);
 Vec3 MultiplyVector(const Vec3& vec, const Matrix3& mat);
+
+

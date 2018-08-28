@@ -178,7 +178,7 @@ bool Point2DOnLine2D(const Point2D & _point, const Line2D & _line2d)
 
 	float B = _line2d.start.y - M * _line2d.start.x;
 
-	return _point.y == M * _point.x + B;
+	return compare(_point.y, M * _point.x + B);
 }
 
 bool Point2DInCircle2D(const Point2D & _point, const Circle2D & _circle2d)
@@ -232,8 +232,9 @@ bool LineRectangle(const Line2D & l, const Rectangle2D & r)
 	}
 	Vec2 norm = (l.end - l.start).GetNormalized();
 	norm.x = (norm.x != 0) ? 1.0f / norm.x : 0;
-
 	norm.y = (norm.y != 0) ? 1.0f / norm.y : 0;
+
+	//为了求得两个向量在x或者y方向上得长度t
 	Vec2 min = (r.GetMin() - l.start) * norm;
 	Vec2 max = (r.GetMax() - l.start) * norm;
 	float tmin = fmaxf(
@@ -244,10 +245,10 @@ bool LineRectangle(const Line2D & l, const Rectangle2D & r)
 		fmaxf(min.x, max.x),
 		fmaxf(min.y, max.y)
 	);
-	if (tmax< 0 || tmin>tmax) {
+	if (tmax < 0 || tmin > tmax) {
 		return false;
 	}
-	float t = (tmin< 0.0f) ? tmax : tmin;
+	float t = (tmin < 0.0f) ? tmax : tmin;
 	return t > 0.0f && t * t < l.LengthSq();
 }
 
@@ -273,7 +274,7 @@ bool CircleCircle(const Circle2D & c1, const Circle2D & c2)
 {
 	Line2D line(c1.center, c2.center);
 	float radiusSum = c1.radius + c2.radius;
-	return line.LengthSq() <= radiusSum;
+	return line.LengthSq() <= radiusSum * radiusSum;
 }
 
 bool CircleRectangle(const Circle2D & circle, const Rectangle2D & rectangle)
@@ -364,4 +365,19 @@ Rectangle2D ContainingRectangle(Point2D * pArray, int arrayCount)
 	}
 
 	return Rectangle2D::FromMinToMax(min, max);
+}
+
+bool PointInShape(const BoundingShape & shape, const Point2D & point)
+{
+	for (int i = 0; i < shape.circleCount; ++i) {
+		if (Point2DInCircle2D(point, shape.circles[i])) {
+			return true;
+		}
+	}
+	for (int i = 0; i < shape.rectCount; ++i) {
+		if (Point2DInRectangle2D(point, shape.rects[i])) {
+			return true;
+		}
+	}
+	return false;
 }

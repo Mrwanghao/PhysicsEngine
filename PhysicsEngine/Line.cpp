@@ -1,6 +1,9 @@
 #include "Line.h"
 
 Line::Line()
+	:
+	start(0.0f, 0.0f, 0.0f),
+	end(0.0f, 0.0f, 1.0f)
 {
 }
 

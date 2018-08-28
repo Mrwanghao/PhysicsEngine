@@ -20,7 +20,7 @@ Plane::~Plane()
 {
 }
 
-float Plane::PlaneEquation(const Point3D & _point)
+float Plane::PlaneEquation(const Point3D & _point) const
 {
 	return _point.Dot(normal) - distance;
 }
